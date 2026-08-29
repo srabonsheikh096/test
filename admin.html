@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Click2Cash</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            width: 95%;
+            margin: 40px auto;
+            flex: 1;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            background: linear-gradient(135deg, #1e293b, #0f172a);
+            padding: 20px 25px;
+            border-radius: 16px;
+            border: 1px solid #334155;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .admin-header h2 {
+            font-size: 1.7rem;
+            color: #ffffff;
+            font-weight: 800;
+        }
+
+        .admin-header h2 span {
+            color: #5eead4;
+        }
+
+        .admin-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn-logout {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.5);
+        }
+
+        /* Tab Navigation Box Layout */
+        .tab-menu-box {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .tab-menu-box {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tab-column {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .tab-btn {
+            background: #0f172a;
+            color: #94a3b8;
+            border: 1px solid #334155;
+            padding: 14px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-align: left;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tab-btn.active, .tab-btn:hover {
+            background: #5eead4;
+            color: #0f172a;
+            border-color: #5eead4;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(94, 234, 212, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            overflow-x: auto;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #5eead4;
+            border-bottom: 1px solid #334155;
+            padding-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #334155;
+        }
+
+        th {
+            background: #0f172a;
+            color: #94a3b8;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background: rgba(51, 65, 85, 0.3);
+        }
+
+        .btn-approve {
+            background: #10b981;
+            color: #ffffff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 6px;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+            transition: all 0.2s;
+        }
+        .btn-approve:hover { background: #059669; transform: translateY(-1px); }
+
+        .btn-reject {
+            background: #ef4444;
+            color: #ffffff;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+            transition: all 0.2s;
+        }
+        .btn-reject:hover { background: #dc2626; transform: translateY(-1px); }
+
+        .membership-select {
+            background: #0f172a;
+            color: #5eead4;
+            border: 1px solid #334155;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        .membership-select:hover { border-color: #5eead4; }
+
+        .btn-ban {
+            background: #f59e0b;
+            color: #0f172a;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 700;
+            margin-right: 6px;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
+            transition: all 0.2s;
+        }
+        .btn-ban:hover { background: #d97706; transform: translateY(-1px); }
+
+        .btn-unban {
+            background: #3b82f6;
+            color: #ffffff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-right: 6px;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+            transition: all 0.2s;
+        }
+        .btn-unban:hover { background: #2563eb; transform: translateY(-1px); }
+
+        .btn-delete {
+            background: #dc2626;
+            color: #ffffff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(220, 38, 38, 0.3);
+            transition: all 0.2s;
+        }
+        .btn-delete:hover { background: #b91c1c; transform: translateY(-1px); }
+
+        .badge-pending { color: #f59e0b; font-weight: 700; background: rgba(245, 158, 11, 0.1); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(245, 158, 11, 0.2); }
+        .badge-approved { color: #10b981; font-weight: 700; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .badge-rejected { color: #ef4444; font-weight: 700; background: rgba(239, 68, 68, 0.1); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .badge-active { color: #10b981; font-weight: 700; background: rgba(16, 185, 129, 0.1); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .badge-banned { color: #ef4444; font-weight: 700; background: rgba(239, 68, 68, 0.1); padding: 4px 10px; border-radius: 20px; border: 1px solid rgba(239, 68, 68, 0.2); }
+
+        footer {
+            background: #020617;
+            color: #64748b;
+            padding: 25px;
+            text-align: center;
+            border-top: 1px solid #1e293b;
+            margin-top: auto;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        
+        <div class="admin-header">
+            <h2>অ্যাডমিন <span>প্যানেল</span></h2>
+            <div class="admin-controls">
+                <span id="adminEmailDisplay" style="color: #cbd5e1; font-size: 0.85rem; font-weight: 600;"></span>
+                <button class="btn-logout" id="logoutBtn">লগআউট</button>
+            </div>
+        </div>
+
+        <!-- Tab Navigation Box (Left: Deposit & Withdraw, Right: Account Status & History) -->
+        <div class="tab-menu-box">
+            <!-- Left Column -->
+            <div class="tab-column">
+                <button class="tab-btn active" onclick="switchTab('depositTab', this)">📥 ডিপোজিট অনুরোধসমূহ</button>
+                <button class="tab-btn" onclick="switchTab('withdrawTab', this)">📤 উইথড্র অনুরোধসমূহ</button>
+            </div>
+            <!-- Right Column -->
+            <div class="tab-column">
+                <button class="tab-btn" onclick="switchTab('usersTab', this)">👥 ব্যবহারকারী তালিকা</button>
+                <button class="tab-btn" onclick="switchTab('historyTab', this)">📜 ইতিহাস (লগ)</button>
+            </div>
+        </div>
+
+        <!-- Tab 1: Pending Deposit Requests -->
+        <div id="depositTab" class="tab-content active">
+            <div class="card">
+                <div class="card-title">পেন্ডিং ডিপোজিট অনুরোধসমূহ</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>তারিখ</th>
+                            <th>ব্যবহারকারীর ইমেইল</th>
+                            <th>প্ল্যানের নাম</th>
+                            <th>পরিমাণ</th>
+                            <th>পেমেন্ট মাধ্যম</th>
+                            <th>প্রেরক নম্বর</th>
+                            <th>TrxID</th>
+                            <th>স্ট্যাটাস</th>
+                            <th>অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="depositTableBody">
+                        <tr><td colspan="9" style="text-align: center; color: #94a3b8;">লোড হচ্ছে...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 2: Pending Withdraw Requests -->
+        <div id="withdrawTab" class="tab-content">
+            <div class="card">
+                <div class="card-title">পেন্ডিং উইথড্র অনুরোধসমূহ</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>তারিখ</th>
+                            <th>ব্যবহারকারীর ইমেইল</th>
+                            <th>মাধ্যম</th>
+                            <th>অ্যাকাউন্ট টাইপ</th>
+                            <th>নম্বর</th>
+                            <th>পরিমাণ</th>
+                            <th>স্ট্যাটাস</th>
+                            <th>অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="withdrawTableBody">
+                        <tr><td colspan="8" style="text-align: center; color: #94a3b8;">লোড হচ্ছে...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 3: Users Account Status -->
+        <div id="usersTab" class="tab-content">
+            <div class="card">
+                <div class="card-title">ব্যবহারকারী ব্যালেন্স, মেম্বারশিপ ও অ্যাকাউন্ট ম্যানেজমেন্ট</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ব্যবহারকারী নাম / আইডি</th>
+                            <th>ইমেইল</th>
+                            <th>ব্যালেন্স</th>
+                            <th>মেম্বারশিপ ও মেয়াদ</th>
+                            <th>অ্যাকাউন্ট স্ট্যাটাস</th>
+                            <th>অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr><td colspan="6" style="text-align: center; color: #94a3b8;">লোড হচ্ছে...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 4: History (Completed/Rejected Requests) -->
+        <div id="historyTab" class="tab-content">
+            <div class="card" style="margin-bottom: 25px;">
+                <div class="card-title">ডিপোজিট ইতিহাস (অনুমোদিত / প্রত্যাখ্যাত)</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>তারিখ</th>
+                            <th>ব্যবহারকারীর ইমেইল</th>
+                            <th>প্ল্যানের নাম</th>
+                            <th>পরিমাণ</th>
+                            <th>পেমেন্ট মাধ্যম</th>
+                            <th>TrxID</th>
+                            <th>স্ট্যাটাস</th>
+                        </tr>
+                    </thead>
+                    <tbody id="depositHistoryBody">
+                        <tr><td colspan="7" style="text-align: center; color: #94a3b8;">ইতিহাস খালি আছে</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card">
+                <div class="card-title">উইথড্র ইতিহাস (পেইড / প্রত্যাখ্যাত)</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>তারিখ</th>
+                            <th>ব্যবহারকারীর ইমেইল</th>
+                            <th>মাধ্যম</th>
+                            <th>নম্বর</th>
+                            <th>পরিমাণ</th>
+                            <th>স্ট্যাটাস</th>
+                        </tr>
+                    </thead>
+                    <tbody id="withdrawHistoryBody">
+                        <tr><td colspan="6" style="text-align: center; color: #94a3b8;">উইথড্র ইতিহাস খালি আছে</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        &copy; ২০২৬ Click2Cash. All Rights Reserved.
+    </footer>
+
+    <!-- Firebase Logic & Admin Scripts -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyByuYaP1fcGz0PJJ3r3QPWt0PNRSR9EUO0",
+            authDomain: "click2cash-134bf.firebaseapp.com",
+            projectId: "click2cash-134bf",
+            storageBucket: "click2cash-134bf.firebasestorage.app",
+            messagingSenderId: "142040665028",
+            appId: "1:142040665028:web:6c7f34b8c47cbd02e6f291"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // অ্যাডমিন ইমেইল তালিকা (আপনার ইমেইলটি এখানে দেওয়া আছে)
+        const ADMIN_EMAILS = [
+            "srabonsheikh096@gmail.com",
+            "admin2@gmail.com",
+            "admin3@gmail.com",
+            "admin4@gmail.com"
+        ];
+
+        const depositTableBody = document.getElementById('depositTableBody');
+        const withdrawTableBody = document.getElementById('withdrawTableBody');
+        const usersTableBody = document.getElementById('usersTableBody');
+        const depositHistoryBody = document.getElementById('depositHistoryBody');
+        const withdrawHistoryBody = document.getElementById('withdrawHistoryBody');
+        const adminEmailDisplay = document.getElementById('adminEmailDisplay');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        window.switchTab = function(tabId, btnElement) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // চেক করুন ইউজার অনুমোদিত অ্যাডমিন কিনা
+                if (!ADMIN_EMAILS.includes(user.email)) {
+                    alert("আপনার এই পেজে প্রবেশের অনুমতি নেই!");
+                    window.location.href = "dashboard.html";
+                    return;
+                }
+                adminEmailDisplay.innerText = `${user.email}`;
+                loadDeposits();
+                loadWithdraws();
+                loadUsers();
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        function loadDeposits() {
+            onSnapshot(collection(db, "deposits"), (snapshot) => {
+                depositTableBody.innerHTML = "";
+                depositHistoryBody.innerHTML = "";
+                
+                let pendingCount = 0;
+                let historyCount = 0;
+
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const depositId = docSnap.id;
+                    const dateStr = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString('bn-BD') : "তারিখ";
+                    const status = data.status || "Pending";
+
+                    if (status === "Pending") {
+                        pendingCount++;
+                        depositTableBody.innerHTML += `
+                            <tr>
+                                <td>${dateStr}</td>
+                                <td>${data.email}</td>
+                                <td><b>${data.plan}</b></td>
+                                <td>৳ ${data.amount}</td>
+                                <td>${data.paymentMethod}</td>
+                                <td>${data.senderNumber}</td>
+                                <td>${data.trxId}</td>
+                                <td><span class="badge-pending">Pending</span></td>
+                                <td>
+                                    <button class="btn-approve" onclick="updateDepositStatus('${depositId}', '${data.uid}', '${data.plan}', 'Approved')">অনুমোদন</button>
+                                    <button class="btn-reject" onclick="updateDepositStatus('${depositId}', '${data.uid}', '${data.plan}', 'Rejected')">বাতিল</button>
+                                </td>
+                            </tr>
+                        `;
+                    } else {
+                        historyCount++;
+                        let badge = status === "Approved" ? `<span class="badge-approved">Approved</span>` : `<span class="badge-rejected">Rejected</span>`;
+                        depositHistoryBody.innerHTML += `
+                            <tr>
+                                <td>${dateStr}</td>
+                                <td>${data.email}</td>
+                                <td><b>${data.plan}</b></td>
+                                <td>৳ ${data.amount}</td>
+                                <td>${data.paymentMethod}</td>
+                                <td>${data.trxId}</td>
+                                <td>${badge}</td>
+                            </tr>
+                        `;
+                    }
+                });
+
+                if (pendingCount === 0) {
+                    depositTableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #94a3b8;">কোনো পেন্ডিং ডিপোজিট অনুরোধ নেই।</td></tr>`;
+                }
+                if (historyCount === 0) {
+                    depositHistoryBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #94a3b8;">ডিপোজিট ইতিহাস খালি আছে</td></tr>`;
+                }
+            });
+        }
+
+        function loadWithdraws() {
+            onSnapshot(collection(db, "withdraws"), (snapshot) => {
+                withdrawTableBody.innerHTML = "";
+                withdrawHistoryBody.innerHTML = "";
+
+                let pendingCount = 0;
+                let historyCount = 0;
+
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const withdrawId = docSnap.id;
+                    const dateStr = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString('bn-BD') : "তারিখ";
+                    const status = data.status || "Pending";
+
+                    if (status === "Pending") {
+                        pendingCount++;
+                        withdrawTableBody.innerHTML += `
+                            <tr>
+                                <td>${dateStr}</td>
+                                <td>${data.email}</td>
+                                <td><b>${data.method}</b></td>
+                                <td>${data.accountType}</td>
+                                <td>${data.number}</td>
+                                <td>৳ ${data.amount}</td>
+                                <td><span class="badge-pending">Pending</span></td>
+                                <td>
+                                    <button class="btn-approve" onclick="updateWithdrawStatus('${withdrawId}', 'Approved')">পেইড দিন</button>
+                                    <button class="btn-reject" onclick="updateWithdrawStatus('${withdrawId}', 'Rejected')">বাতিল</button>
+                                </td>
+                            </tr>
+                        `;
+                    } else {
+                        historyCount++;
+                        let badge = status === "Approved" ? `<span class="badge-approved">Paid</span>` : `<span class="badge-rejected">Rejected</span>`;
+                        withdrawHistoryBody.innerHTML += `
+                            <tr>
+                                <td>${dateStr}</td>
+                                <td>${data.email}</td>
+                                <td><b>${data.method}</b></td>
+                                <td>${data.number}</td>
+                                <td>৳ ${data.amount}</td>
+                                <td>${badge}</td>
+                            </tr>
+                        `;
+                    }
+                });
+
+                if (pendingCount === 0) {
+                    withdrawTableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #94a3b8;">কোনো পেন্ডিং উইথড্র অনুরোধ নেই।</td></tr>`;
+                }
+                if (historyCount === 0) {
+                    withdrawHistoryBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #94a3b8;">উইথড্র ইতিহাস খালি আছে</td></tr>`;
+                }
+            });
+        }
+
+        function loadUsers() {
+            onSnapshot(collection(db, "users"), async (snapshot) => {
+                usersTableBody.innerHTML = "";
+                if (snapshot.empty) {
+                    usersTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #94a3b8;">কোনো ব্যবহারকারী পাওয়া যায়নি</td></tr>`;
+                    return;
+                }
+
+                const now = new Date();
+
+                snapshot.forEach(async (docSnap) => {
+                    const data = docSnap.data();
+                    const userId = docSnap.id;
+                    const name = data.username || data.name || "ব্যবহারকারী";
+                    const email = data.email || "N/A";
+                    const balance = data.balance || 0;
+                    let currentMembership = data.membership || "Free";
+                    const accountStatus = data.status || "Active";
+                    const expiryTimestamp = data.membershipExpiry;
+
+                    if (currentMembership !== "Free" && expiryTimestamp) {
+                        const expiryDate = expiryTimestamp.toDate();
+                        if (now > expiryDate) {
+                            currentMembership = "Free";
+                            try {
+                                await updateDoc(doc(db, "users", userId), {
+                                    membership: "Free",
+                                    membershipExpiry: null
+                                });
+                            } catch (e) {
+                                console.error("Auto downgrade error: ", e);
+                            }
+                        }
+                    }
+
+                    let expiryText = "";
+                    if (currentMembership !== "Free" && expiryTimestamp) {
+                        expiryText = `<br><small style="color:#f59e0b">মেয়াদ শেষ: ${expiryTimestamp.toDate().toLocaleDateString('bn-BD')}</small>`;
+                    }
+
+                    let statusBadge = `<span class="badge-active">Active</span>`;
+                    let actionBtns = `<button class="btn-ban" onclick="toggleUserStatus('${userId}', 'Banned')">ব্যান করুন</button>`;
+
+                    if (accountStatus === "Banned") {
+                        statusBadge = `<span class="badge-banned">Banned</span>`;
+                        actionBtns = `<button class="btn-unban" onclick="toggleUserStatus('${userId}', 'Active')">আনব্যান করুন</button>`;
+                    }
+
+                    actionBtns += `<button class="btn-delete" onclick="deleteUserAccount('${userId}')">ডিলিট</button>`;
+
+                    const membershipDropdown = `
+                        <select class="membership-select" onchange="changeUserMembership('${userId}', this.value)">
+                            <option value="Free" ${currentMembership === 'Free' ? 'selected' : ''}>Free</option>
+                            <option value="Basic" ${currentMembership === 'Basic' ? 'selected' : ''}>Basic (৬ মাস)</option>
+                            <option value="Premium" ${currentMembership === 'Premium' ? 'selected' : ''}>Premium (৪ মাস)</option>
+                            <option value="Pro" ${currentMembership === 'Pro' ? 'selected' : ''}>Pro (৪ মাস)</option>
+                        </select>
+                        ${expiryText}
+                    `;
+
+                    usersTableBody.innerHTML += `
+                        <tr>
+                            <td><b>${name}</b><br><small style="color:#64748b">${userId}</small></td>
+                            <td>${email}</td>
+                            <td>৳ ${balance.toFixed(2)}</td>
+                            <td>${membershipDropdown}</td>
+                            <td>${statusBadge}</td>
+                            <td>${actionBtns}</td>
+                        </tr>
+                    `;
+                });
+            });
+        }
+
+        function calculateExpiryDate(planName) {
+            const date = new Date();
+            if (planName === "Basic") {
+                date.setMonth(date.getMonth() + 6);
+            } else if (planName === "Premium" || planName === "Pro") {
+                date.setMonth(date.getMonth() + 4);
+            } else {
+                return null;
+            }
+            return date;
+        }
+
+        window.updateDepositStatus = async function(depositId, userId, planName, newStatus) {
+            if (!confirm(`নিশ্চিত করুন আপনি ${newStatus} করতে চান কি?`)) return;
+            try {
+                await updateDoc(doc(db, "deposits", depositId), { status: newStatus });
+                if (newStatus === "Approved" && userId) {
+                    const expiryDate = calculateExpiryDate(planName);
+                    await updateDoc(doc(db, "users", userId), { 
+                        membership: planName,
+                        membershipExpiry: expiryDate 
+                    });
+                }
+                alert("ডিপোজিট স্ট্যাটাস সফলভাবে আপডেট করা হয়েছে!");
+            } catch (error) {
+                alert("ত্রুটি: " + error.message);
+            }
+        };
+
+        window.updateWithdrawStatus = async function(withdrawId, newStatus) {
+            if (!confirm(`উইথড্র অনুরোধটি পরিবর্তন করে ${newStatus === 'Approved' ? 'Paid' : 'Rejected'} করতে চান কি?`)) return;
+            try {
+                await updateDoc(doc(db, "withdraws", withdrawId), { status: newStatus });
+                alert("উইথড্র অনুরোধের স্ট্যাটাস সফলভাবে আপডেট করা হয়েছে!");
+            } catch (error) {
+                alert("ত্রুটি: " + error.message);
+            }
+        };
+
+        window.changeUserMembership = async function(userId, newMembership) {
+            try {
+                const expiryDate = calculateExpiryDate(newMembership);
+                await updateDoc(doc(db, "users", userId), { 
+                    membership: newMembership,
+                    membershipExpiry: expiryDate
+                });
+                alert(`মেম্বারশিপ সফলভাবে পরিবর্তন করে "${newMembership}" করা হলো!`);
+            } catch (error) {
+                alert("ত্রুটি: " + error.message);
+            }
+        };
+
+        window.toggleUserStatus = async function(userId, newStatus) {
+            if (!confirm(`ব্যবহারকারী স্ট্যাটাস পরিবর্তন করে ${newStatus} করতে চান কি?`)) return;
+            try {
+                await updateDoc(doc(db, "users", userId), { status: newStatus });
+                alert(`ব্যবহারকারী স্ট্যাটাস পরিবর্তন ${newStatus} করা হলো!`);
+            } catch (error) {
+                alert("ত্রুটি: " + error.message);
+            }
+        };
+
+        window.deleteUserAccount = async function(userId) {
+            if (!confirm("সাবধান! আপনি কি এই ব্যবহারকারীকে স্থায়ীভাবে ডাটাবেজ থেকে মুছে ফেলতে চান?")) return;
+            try {
+                await deleteDoc(doc(db, "users", userId));
+                alert("ব্যবহারকারী অ্যাকাউন্টটি সফলভাবে ডিলিট করা হয়েছে!");
+            } catch (error) {
+                alert("ত্রুটি: " + error.message);
+            }
+        };
+
+        logoutBtn.addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.href = "login.html";
+            });
+        });
+    </script>
+</body>
+</html>
