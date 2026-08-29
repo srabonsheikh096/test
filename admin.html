@@ -911,24 +911,13 @@
 
         function calculateExpiryDate(planName) {
             const date = new Date();
-            if (planName === "Basic") {
-                date.setMonth(date.getMonth() + ৩);
-            } else if (planName === "Premium" || planName === "Pro") {
-                date.setMonth(date.getMonth() + ৩);
+            if (planName === "Basic" || planName === "Premium" || planName === "Pro") {
+                date.setMonth(date.getMonth() + 3);
             } else {
                 return null;
             }
             return date;
         }
-
-        window.addReferBonus = async function(userId, bonusAmountStr, selectElement) {
-            const bonusAmount = parseFloat(bonusAmountStr);
-            if (isNaN(bonusAmount)) return;
-
-            if (!confirm(`এই ব্যবহারকারীর অ্যাকাউন্টে ${bonusAmount} টাকা রেফার বোনাস যোগ করতে চান কি?`)) {
-                selectElement.value = "";
-                return;
-            }
 
             try {
                 const userRef = doc(db, "users", userId);
