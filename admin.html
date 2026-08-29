@@ -395,7 +395,7 @@
                             <th>ব্যবহারকারী নাম / আইডি</th>
                             <th>ইমেইল</th>
                             <th>ব্যালেন্স</th>
-                            <th>মেম্বারশিপ ও মেয়াদ</th>
+                            <th>মেম্বারশিপ ও মেয়াদ (৩ মাস)</th>
                             <th>রেফার বোনাস ব্যালেন্স যোগ</th>
                             <th>অ্যাকাউন্ট স্ট্যাটাস</th>
                             <th>অ্যাকশন</th>
@@ -525,7 +525,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, getDoc, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, getDoc, addDoc, serverTimestamp, increment } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyByuYaP1fcGz0PJJ3r3QPWt0PNRSR9EUO0",
@@ -768,9 +768,9 @@
                     const membershipDropdown = `
                         <select class="membership-select" onchange="changeUserMembership('${userId}', this.value)">
                             <option value="Free" ${currentMembership === 'Free' ? 'selected' : ''}>Free</option>
-                            <option value="Basic" ${currentMembership === 'Basic' ? 'selected' : ''}>Basic (৩ মাস)</option>
-                            <option value="Premium" ${currentMembership === 'Premium' ? 'selected' : ''}>Premium (৩ মাস)</option>
-                            <option value="Pro" ${currentMembership === 'Pro' ? 'selected' : ''}>Pro (৩ মাস)</option>
+                            <option value="Basic" ${currentMembership === 'Basic' ? 'selected' : ''}>Basic (৳ ৯০০ - ৩ মাস)</option>
+                            <option value="Premium" ${currentMembership === 'Premium' ? 'selected' : ''}>Premium (৳ ১৮০০ - ৩ মাস)</option>
+                            <option value="Pro" ${currentMembership === 'Pro' ? 'selected' : ''}>Pro (৳ ২৭০০ - ৩ মাস)</option>
                         </select>
                         ${expiryText}
                     `;
@@ -803,7 +803,6 @@
             });
         }
 
-        // বিকাশ ও নগদ নম্বর ম্যানেজমেন্ট ফাংশনসমূহ
         window.addPaymentNumber = async function(type) {
             const inputField = document.getElementById(type === 'bkash' ? 'bkashNumberInput' : 'nogodNumberInput');
             const typeField = document.getElementById(type === 'bkash' ? 'bkashTypeInput' : 'nogodTypeInput');
@@ -817,10 +816,10 @@
 
             try {
                 await addDoc(collection(db, "payment_numbers"), {
-                    gateway: type, // 'bkash' or 'nogod'
+                    gateway: type,
                     number: number,
                     accountType: accountType,
-                    status: "Active", // ডিফল্টভাবে Active থাকবে
+                    status: "Active",
                     timestamp: serverTimestamp()
                 });
                 alert("নম্বর সফলভাবে যোগ করা হয়েছে!");
@@ -886,34 +885,9 @@
             }
         }
 
-        // ডিপোজিট পেজের জন্য রেন্ডম একটিভ নম্বর ফেচ করার ফাংশন (deposit.html ফাইলে এই লজিক ব্যবহার করতে পারবেন)
-        window.getRandomActiveNumber = async function(gatewayName) {
-            try {
-                const querySnapshot = await getDocs(collection(db, "payment_numbers"));
-                let activeNumbers = [];
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    if (data.gateway === gatewayName && data.status === "Active") {
-                        activeNumbers.push(data);
-                    }
-                });
-
-                if (activeNumbers.length > 0) {
-                    // রেন্ডমলি যেকোনো একটি সিলেক্ট করা
-                    const randomIndex = Math.floor(Math.random() * activeNumbers.length);
-                    return activeNumbers[randomIndex];
-                }
-            } catch (e) {
-                console.error("Error fetching random number: ", e);
-            }
-            return null;
-        }
-
         function calculateExpiryDate(planName) {
             const date = new Date();
-            if (planName === "Basic") {
-                date.setMonth(date.getMonth() + 3);
-            } else if (planName === "Premium" || planName === "Pro") {
+            if (planName === "Basic" || planName === "Premium" || planName === "Pro") {
                 date.setMonth(date.getMonth() + 3);
             } else {
                 return null;
@@ -933,9 +907,10 @@
             try {
                 const userRef = doc(db, "users", userId);
                 await updateDoc(userRef, {
-                    balance: increment(bonusAmount)
+                    balance: increment(bonusAmount),
+                    referralBonus: increment(bonusAmount)
                 });
-                alert(`সফলভাবে ${bonusAmount} টাকা রেফার বোনাস যোগ করা হয়েছে!`);
+                alert(`সফলভাবে ${bonusAmount} টাকা মূল ব্যালেন্স ও রেফারেল বোনাস ফিল্ডে যোগ করা হয়েছে!`);
                 selectElement.value = "";
             } catch (error) {
                 alert("ত্রুটি: " + error.message);
@@ -1010,4 +985,4 @@
         });
     </script>
 </body>
-                    </html>
+                                                             </html>
