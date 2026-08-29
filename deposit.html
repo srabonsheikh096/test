@@ -276,15 +276,15 @@
     <main class="deposit-container">
         
         <div class="section-header">
-            <h2>প্ল্যান নির্বাচন ও <span>ডিপোজিট</span></h2>
-            <p>আপনার পছন্দের মেম্বারশিপ প্ল্যান বেছে নিন এবং পেমেন্ট সম্পন্ন করুন</p>
+            <h2>প্ল্যান আপগ্রেড ও <span>ডিপোজিট</span></h2>
+            <p>আপনার পছন্দের প্ল্যান সিলেক্ট করুন এবং পেমেন্ট সম্পন্ন করুন</p>
         </div>
 
         <form id="depositForm">
             
             <!-- Step 1: Select Plan -->
             <div class="deposit-card">
-                <div class="card-title">📦 একটি প্ল্যান বেছে নিন (Select Plan)</div>
+                <div class="card-title">📌 ১. একটি প্ল্যান সিলেক্ট করুন (Select Plan)</div>
                 
                 <div class="plan-grid">
                     <div class="plan-option" onclick="selectPlan('Basic', 800, this)">
@@ -309,7 +309,7 @@
                 <div class="card-title">💳 পেমেন্ট তথ্য দিন</div>
 
                 <div class="instruction-box">
-                    <strong>নির্দেশনা:</strong> নিচে দেওয়া আমাদের মার্চেন্ট/পার্সোনাল নম্বরে টাকা পাঠিয়ে সঠিক তথ্য দিয়ে রিকোয়েস্ট সাবমিট করুন। <br>
+                    <strong>নির্দেশনা:</strong> নিচে দেওয়া আমাদের মার্চেন্ট/পার্সোনাল নম্বরে টাকা পাঠিয়ে সঠিক পেমেন্ট ট্রানজেকশন আইডি সাবমিট করুন। <br>
                     • বিকাশ/নগদ (Personal): <strong>017XXXXXXXX</strong>
                 </div>
 
@@ -321,7 +321,7 @@
                 <div class="form-group">
                     <label>পেমেন্ট মাধ্যম (Payment Method)</label>
                     <select id="paymentMethod" required>
-                        <option value="">মাধ্যম সিলেক্ট করুন</option>
+                        <option value="">মাধ্যম নির্বাচন করুন</option>
                         <option value="bKash">বিকাশ (bKash)</option>
                         <option value="Nagad">নগদ (Nagad)</option>
                         <option value="Rocket">রকেট (Rocket)</option>
@@ -339,7 +339,7 @@
                 </div>
 
                 <!-- Pay Now Button -->
-                <button type="submit" class="btn-pay" id="payNowBtn">Pay Now (পেমেন্ট রিকোয়েস্ট পাঠান)</button>
+                <button type="submit" class="btn-pay" id="payNowBtn">Pay Now (পেমেন্ট ট্রানজেকশন জমা)</button>
             </div>
 
         </form>
@@ -352,7 +352,7 @@
             <div class="modal-icon">🎉</div>
             <div class="modal-title">সফল হয়েছে!</div>
             <div class="modal-desc">
-                আপনার ডিপোজিট রিকোয়েস্ট সফলভাবে জমা হয়েছে! অ্যাডমিন যাচাই করার পর প্ল্যান আপডেট করা হবে।
+                আপনার ডিপোজিট ট্রানজেকশন সফলভাবে জমা হয়েছে! কর্তৃপক্ষ যাচাই করে প্ল্যান আপডেট করে দেবেন।
             </div>
             <a href="dashboard.html" class="btn-home">হোমে ফিরে যান</a>
         </div>
@@ -413,8 +413,15 @@
             if (!currentUser) return;
 
             const plan = document.getElementById('selectedPlanInput').value;
-            const amountText = document.getElementById('amountDisplay').value;
-            const amount = amountText.includes('800') ? 800 : amountText.includes('1600') ? 1600 : 2800;
+            
+            // প্ল্যান অনুযায়ী সঠিক টাকা নির্ধারণ (Basic = 800, Premium = 1600, Pro = 2800)
+            let amount = 800;
+            if (plan === 'Premium') {
+                amount = 1600;
+            } else if (plan === 'Pro') {
+                amount = 2800;
+            }
+
             const method = document.getElementById('paymentMethod').value;
             const sender = document.getElementById('senderNumber').value.trim();
             const trxId = document.getElementById('trxId').value.trim();
