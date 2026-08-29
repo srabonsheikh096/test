@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Deposit & Upgrade Plan - Click2Cash</title>
+    <title>Withdraw - Click2Cash</title>
     <style>
         * {
             margin: 0;
@@ -20,97 +20,60 @@
             flex-direction: column;
         }
 
-        /* Deposit Main Container */
-        .deposit-container {
-            max-width: 900px;
+        .withdraw-container {
+            max-width: 600px;
             width: 90%;
             margin: 100px auto 40px auto;
             flex: 1;
         }
 
-        .section-header {
-            margin-bottom: 25px;
-        }
-
-        .section-header h2 {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #ffffff;
-        }
-
-        .section-header h2 span {
-            color: #5eead4;
-        }
-
-        .section-header p {
-            color: #94a3b8;
-            font-size: 0.95rem;
-        }
-
-        /* Card Style */
-        .deposit-card {
+        .withdraw-card {
             background: #1e293b;
             border: 1px solid #334155;
             border-radius: 16px;
             padding: 30px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
         }
 
-        .card-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 1px solid #334155;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        /* Plan Selection Grid */
-        .plan-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .plan-option {
-            background: #0f172a;
-            border: 2px solid #334155;
-            border-radius: 12px;
-            padding: 20px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .plan-option:hover {
-            border-color: #5eead4;
-        }
-
-        .plan-option.selected {
-            border-color: #5eead4;
-            background: rgba(94, 234, 212, 0.05);
-            box-shadow: 0 0 15px rgba(94, 234, 212, 0.2);
-        }
-
-        .plan-name {
-            font-size: 1.1rem;
-            font-weight: 700;
+        .withdraw-card h2 {
+            font-size: 1.6rem;
             color: #ffffff;
             margin-bottom: 5px;
+            font-weight: 700;
         }
 
-        .plan-price {
-            font-size: 1.5rem;
-            font-weight: 800;
+        .withdraw-card h2 span {
             color: #5eead4;
         }
 
-        /* Form Inputs */
+        .withdraw-card p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        .balance-box-sm {
+            background: rgba(94, 234, 212, 0.05);
+            border: 1px solid rgba(94, 234, 212, 0.2);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .balance-box-sm span {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        .balance-box-sm strong {
+            color: #5eead4;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
         .form-group {
             margin-bottom: 20px;
         }
@@ -120,155 +83,102 @@
             color: #cbd5e1;
             font-size: 0.9rem;
             margin-bottom: 8px;
+            font-weight: 600;
         }
 
-        .form-group select, .form-group input {
+        .form-control {
             width: 100%;
             padding: 12px 15px;
             background: #0f172a;
             border: 1px solid #334155;
             border-radius: 8px;
             color: #ffffff;
-            font-size: 0.95rem;
+            font-size: 1rem;
+            outline: none;
             transition: border-color 0.3s;
         }
 
-        .form-group select:focus, .form-group input:focus {
-            outline: none;
+        .form-control:focus {
             border-color: #5eead4;
         }
 
-        .form-group input:disabled {
-            background: #131c2e;
-            color: #5eead4;
-            font-weight: 700;
-            cursor: not-allowed;
-        }
-
-        /* Payment Instruction & Number Box */
-        .instruction-box {
-            background: rgba(56, 189, 248, 0.1);
-            border: 1px solid rgba(56, 189, 248, 0.3);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            font-size: 0.9rem;
-            color: #38bdf8;
-            line-height: 1.6;
-        }
-
-        .number-display-box {
-            background: #0f172a;
-            border: 2px dashed #5eead4;
-            border-radius: 8px;
-            padding: 12px;
-            margin-top: 10px;
-            text-align: center;
-            font-size: 1.1rem;
-            color: #5eead4;
-            font-weight: 700;
-            display: none;
-        }
-
-        /* Pay Now Button */
-        .btn-pay {
-            background: #5eead4;
-            color: #0f172a;
-            width: 100%;
-            padding: 15px;
-            font-weight: 800;
-            font-size: 1.05rem;
-            border: none;
-            border-radius: 8px;
+        select.form-control {
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            display: none;
         }
 
-        .btn-pay:hover {
-            background: #38bdf8;
-            transform: translateY(-2px);
-        }
-
-        /* Custom Stylish Modal Overlay */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
+        .btn-withdraw {
             width: 100%;
-            height: 100%;
-            background: rgba(15, 23, 42, 0.85);
-            backdrop-filter: blur(5px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-box {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 16px;
-            padding: 30px;
-            width: 90%;
-            max-width: 420px;
-            text-align: center;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-        }
-
-        .modal-overlay.active .modal-box {
-            transform: translateY(0);
-        }
-
-        .modal-icon {
-            font-size: 3rem;
-            margin-bottom: 15px;
-        }
-
-        .modal-title {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 12px;
-        }
-
-        .modal-desc {
-            color: #94a3b8;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            margin-bottom: 25px;
-        }
-
-        .btn-home {
             background: #5eead4;
             color: #0f172a;
-            width: 100%;
-            padding: 12px;
+            padding: 14px;
             font-weight: 700;
             font-size: 1rem;
             border: none;
             border-radius: 8px;
             cursor: pointer;
-            text-decoration: none;
+            transition: background 0.3s, transform 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-withdraw:hover {
+            background: #38bdf8;
+            transform: translateY(-2px);
+        }
+
+        .notice-box {
+            margin-bottom: 25px;
+            background: rgba(56, 189, 248, 0.05);
+            border-left: 3px solid #38bdf8;
+            padding: 12px 15px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        /* Success UI Screen */
+        .success-screen {
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        .success-icon {
+            font-size: 3.5rem;
+            color: #5eead4;
+            margin-bottom: 15px;
+        }
+
+        .success-screen h3 {
+            font-size: 1.4rem;
+            color: #ffffff;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .success-screen p {
+            color: #94a3b8;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .btn-home {
             display: inline-block;
-            transition: background 0.3s;
+            background: #5eead4;
+            color: #0f172a;
+            padding: 12px 30px;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.3s, transform 0.2s;
         }
 
         .btn-home:hover {
             background: #38bdf8;
+            transform: translateY(-2px);
         }
 
-        /* Footer */
         footer {
             background: #020617;
             color: #64748b;
@@ -284,91 +194,54 @@
 
     <div id="header-container"></div>
 
-    <main class="deposit-container">
-        
-        <div class="section-header">
-            <h2>প্ল্যান আপগ্রেড ও <span>ডিপোজিট</span></h2>
-            <p>আপনার পছন্দের প্ল্যান সিলেক্ট করুন এবং পেমেন্ট সম্পন্ন করুন</p>
-        </div>
+    <main class="withdraw-container">
+        <div class="withdraw-card" id="cardContent">
+            <h2>টাকা <span>উইথড্র</span> করুন</h2>
+            <p>আপনার আয়কৃত টাকা খুব দ্রুত আপনার বিকাশ বা নগদে পেমেন্ট নিন।</p>
 
-        <form id="depositForm">
-            
-            <div class="deposit-card">
-                <div class="card-title">📌 ১. একটি প্ল্যান সিলেক্ট করুন (Select Plan)</div>
-                
-                <div class="plan-grid">
-                    <div class="plan-option" onclick="selectPlan('Basic', 900, this)">
-                        <div class="plan-name">Basic Plan</div>
-                        <div class="plan-price">900৳</div>
-                    </div>
-                    <div class="plan-option" onclick="selectPlan('Premium', 1800, this)">
-                        <div class="plan-name">Premium Plan</div>
-                        <div class="plan-price">1800৳</div>
-                    </div>
-                    <div class="plan-option" onclick="selectPlan('Pro', 2700, this)">
-                        <div class="plan-name">Pro Plan</div>
-                        <div class="plan-price">2700৳</div>
-                    </div>
-                </div>
-
-                <input type="hidden" id="selectedPlanInput" required>
+            <div class="balance-box-sm">
+                <span>বর্তমান মূল ব্যালেন্স:</span>
+                <strong id="userAvailableBalance">৳ 0.00</strong>
             </div>
 
-            <div class="deposit-card" id="paymentDetailsCard" style="display: none;">
-                <div class="card-title">💳 পেমেন্ট তথ্য দিন</div>
+            <!-- নিয়মাবলীর বক্সটি বর্তমান মূল ব্যালেন্সের ঠিক নিচে বসানো হলো -->
+            <div class="notice-box" id="noticeBoxText">
+                <strong>নিয়মাবলী:</strong> রিকোয়েস্ট করার ২৪ ঘণ্টার মধ্যে পেমেন্ট কমপ্লিট করা হয়। ভুল নম্বর প্রদান করলে কর্তৃপক্ষ দায়ী থাকবে না।
+            </div>
 
-                <!-- নিয়মাবলীর বক্সটি বর্তমান মূল ব্যালেন্স/নির্বাচিত প্ল্যান পরিমাণের ঠিক নিচে বসানো হয়েছে -->
+            <form id="withdrawForm" onsubmit="handleWithdraw(event)">
                 <div class="form-group">
-                    <label>নির্বাচিত প্ল্যান ও পরিমাণ (Amount)</label>
-                    <input type="text" id="amountDisplay" disabled>
-                </div>
-
-                <div class="instruction-box">
-                    <strong>নির্দেশনা:</strong> আমাদের নাম্বরে শুধুমাত্র সেন্ড মানি গ্রহণ করা হয়। নিচে মাধ্যম সিলেক্ট করার পর পেমেন্ট নম্বর দেখতে পাবেন। টাকা পাঠিয়ে সঠিক ট্রানজেকশন আইডি সাবমিট করুন।
-                </div>
-
-                <div class="form-group">
-                    <label>Payment Method</label>
-                    <select id="paymentMethod" required onchange="showPaymentNumber(this.value)">
-                        <option value="">মাধ্যম নির্বাচন করুন</option>
-                        <option value="bKash">বিকাশ (bKash)</option>
+                    <label>পেমেন্ট মাধ্যম (Payment Method)</label>
+                    <select class="form-control" id="withdrawMethod" required>
+                        <option value="" disabled selected>মাধ্যম সিলেক্ট করুন</option>
+                        <option value="Bkash">বিকাশ (Bkash)</option>
                         <option value="Nagad">নগদ (Nagad)</option>
+                        <option value="Rocket">রকেট (Rocket)</option>
                     </select>
                 </div>
 
                 <div class="form-group">
-                    <div id="numberDisplayBox" class="number-display-box">
-                        মাধ্যম সিলেক্ট করুন...
-                    </div>
+                    <label>অ্যাকাউন্ট টাইপ (Account Type)</label>
+                    <select class="form-control" id="accountType" required>
+                        <option value="Personal" selected>পার্সোনাল (Personal)</option>
+                        <option value="Agent">এজেন্ট (Agent)</option>
+                    </select>
                 </div>
 
                 <div class="form-group">
-                    <label>যে নম্বর থেকে টাকা পাঠিয়েছেন (Sender Number)</label>
-                    <input type="tel" id="senderNumber" required placeholder="01XXXXXXXXX">
+                    <label>একাউন্ট নম্বর (Account Number)</label>
+                    <input type="number" class="form-control" id="withdrawNumber" placeholder="যেমন: 01712345678" required>
                 </div>
 
                 <div class="form-group">
-                    <label>ট্রানজেকশন আইডি (TrxID)</label>
-                    <input type="text" id="trxId" required placeholder="যেমন: 9N8K7L6M54">
+                    <label id="amountLabel">টাকার পরিমাণ (Amount in BDT)</label>
+                    <input type="number" class="form-control" id="withdrawAmount" placeholder="সর্বনিম্ন উইথড্র পরিমাণ লোড হচ্ছে..." required>
                 </div>
 
-                <button type="submit" class="btn-pay" id="payNowBtn">Pay Now</button>
-            </div>
-
-        </form>
-
-    </main>
-
-    <div class="modal-overlay" id="successModal">
-        <div class="modal-box">
-            <div class="modal-icon">🎉</div>
-            <div class="modal-title">সফল হয়েছে!</div>
-            <div class="modal-desc">
-                আপনার ডিপোজিট ট্রানজেকশন সফলভাবে জমা হয়েছে! কর্তৃপক্ষ যাচাই করে প্ল্যান আপডেট করে দেবেন।
-            </div>
-            <a href="dashboard.html" class="btn-home">Home page</a>
+                <button type="submit" class="btn-withdraw" id="submitBtn">উইথড্র রিকোয়েস্ট পাঠান</button>
+            </form>
         </div>
-    </div>
+    </main>
 
     <footer>
         &copy; ২০২৬ Click2Cash. All Rights Reserved.
@@ -377,7 +250,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, doc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot, updateDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyByuYaP1fcGz0PJJ3r3QPWt0PNRSR9EUO0",
@@ -392,109 +265,109 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        let currentUser = null;
-        let adminSettings = {
-            bkashNumber: "017XXXXXXXX (Not Set)",
-            nagadNumber: "018XXXXXXXX (Not Set)",
-            bkashActive: true,
-            nagadActive: true
-        };
+        let currentUserId = null;
+        let currentUserEmail = "";
+        let currentBalance = 0;
+        let userPlan = "Basic";
+        let minWithdrawLimit = 1000; // ডিফল্ট
 
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(auth, (user) => {
             if (user) {
-                currentUser = user;
-                await fetchAdminPaymentSettings();
+                currentUserId = user.uid;
+                currentUserEmail = user.email;
+
+                onSnapshot(doc(db, "users", currentUserId), (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        currentBalance = data.balance || 0;
+                        userPlan = data.plan || "Basic"; 
+
+                        if (userPlan === 'Pro') {
+                            minWithdrawLimit = 3000;
+                        } else if (userPlan === 'Premium') {
+                            minWithdrawLimit = 2000;
+                        } else {
+                            minWithdrawLimit = 1000; 
+                        }
+
+                        const balanceEl = document.getElementById('userAvailableBalance');
+                        if(balanceEl) {
+                            balanceEl.innerText = `৳ ${currentBalance.toFixed(2)}`;
+                        }
+
+                        const amountInput = document.getElementById('withdrawAmount');
+                        if(amountInput) {
+                            amountInput.min = minWithdrawLimit;
+                            amountInput.placeholder = `সর্বনিম্ন ${minWithdrawLimit} টাকা (${userPlan} Plan)`;
+                        }
+
+                        const noticeBox = document.getElementById('noticeBoxText');
+                        if(noticeBox) {
+                            noticeBox.innerHTML = `<strong>নিয়মাবলী (${userPlan} Plan):</strong> আপনার বর্তমান প্ল্যান অনুযায়ী সর্বনিম্ন উইথড্র <strong>${minWithdrawLimit} টাকা</strong>। রিকোয়েস্ট করার ২৪ ঘণ্টার মধ্যে পেমেন্ট কমপ্লিট করা হয়। ভুল নম্বর প্রদান করলে কর্তৃপক্ষ দায়ী থাকবে না।`;
+                        }
+                    }
+                });
             } else {
                 window.location.href = "login.html";
             }
         });
 
-        async function fetchAdminPaymentSettings() {
-            try {
-                const docRef = doc(db, "settings", "payment");
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    adminSettings.bkashNumber = data.bkashNumber || adminSettings.bkashNumber;
-                    adminSettings.nagadNumber = data.nagadNumber || adminSettings.nagadNumber;
-                    adminSettings.bkashActive = data.bkashActive !== undefined ? data.bkashActive : true;
-                    adminSettings.nagadActive = data.nagadActive !== undefined ? data.nagadActive : true;
-                }
-            } catch (err) {
-                console.log("Settings load error: ", err);
-            }
-        }
+        window.handleWithdraw = async function(event) {
+            event.preventDefault();
 
-        window.selectPlan = function(planName, planPrice, element) {
-            document.querySelectorAll('.plan-option').forEach(opt => opt.classList.remove('selected'));
-            element.classList.add('selected');
+            const method = document.getElementById('withdrawMethod').value;
+            const accType = document.getElementById('accountType').value;
+            const number = document.getElementById('withdrawNumber').value;
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
 
-            document.getElementById('selectedPlanInput').value = planName;
-            document.getElementById('amountDisplay').value = `৳ ${planPrice} (${planName} Plan)`;
-
-            document.getElementById('paymentDetailsCard').style.display = 'block';
-            document.getElementById('payNowBtn').style.display = 'block';
-            
-            document.getElementById('paymentDetailsCard').scrollIntoView({ behavior: 'smooth' });
-        };
-
-        window.showPaymentNumber = function(method) {
-            const box = document.getElementById('numberDisplayBox');
-            box.style.display = 'block';
-
-            if (method === 'bKash') {
-                if (adminSettings.bkashActive) {
-                    box.innerHTML = `বিকাশ (Personal) নম্বর: <span style="color:#ffffff;">${adminSettings.bkashNumber}</span> (Send Money)`;
-                } else {
-                    box.innerHTML = `<span style="color: #f87171;">বিকাশ পেমেন্ট বর্তমানে বন্ধ রয়েছে।</span>`;
-                }
-            } else if (method === 'Nagad') {
-                if (adminSettings.nagadActive) {
-                    box.innerHTML = `নগদ (Personal) নম্বর: <span style="color:#ffffff;">${adminSettings.nagadNumber}</span> (Send Money)`;
-                } else {
-                    box.innerHTML = `<span style="color: #f87171;">নগদ পেমেন্ট বর্তমানে বন্ধ রয়েছে।</span>`;
-                }
-            } else {
-                box.style.display = 'none';
-            }
-        };
-
-        const depositForm = document.getElementById('depositForm');
-        depositForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            if (!currentUser) return;
-
-            const plan = document.getElementById('selectedPlanInput').value;
-            
-            let amount = 900;
-            if (plan === 'Premium') {
-                amount = 1800;
-            } else if (plan === 'Pro') {
-                amount = 2700;
+            if (amount < minWithdrawLimit) {
+                alert(`আপনার বর্তমান (${userPlan}) প্ল্যান অনুযায়ী সর্বনিম্ন উইথড্র পরিমাণ ${minWithdrawLimit} টাকা হতে হবে।`);
+                return;
             }
 
-            const method = document.getElementById('paymentMethod').value;
-            const sender = document.getElementById('senderNumber').value.trim();
-            const trxId = document.getElementById('trxId').value.trim();
+            if (amount > currentBalance) {
+                alert("আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই!");
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "প্রসেসিং হচ্ছে...";
 
             try {
-                await addDoc(collection(db, "deposits"), {
-                    uid: currentUser.uid,
-                    email: currentUser.email,
-                    plan: plan,
+                await addDoc(collection(db, "withdraws"), {
+                    uid: currentUserId,
+                    email: currentUserEmail,
+                    plan: userPlan,
+                    method: method,
+                    accountType: accType,
+                    number: number,
                     amount: amount,
-                    paymentMethod: method,
-                    senderNumber: sender,
-                    trxId: trxId,
                     status: "Pending",
                     timestamp: serverTimestamp()
                 });
 
-                document.getElementById('successModal').classList.add('active');
+                const userRef = doc(db, "users", currentUserId);
+                await updateDoc(userRef, {
+                    balance: currentBalance - amount
+                });
+
+                const cardContent = document.getElementById('cardContent');
+                cardContent.innerHTML = `
+                    <div class="success-screen">
+                        <div class="success-icon">✅</div>
+                        <h3>উইথড্র সফলভাবে জমা হয়েছে!</h3>
+                        <p>২৪/৪৮ ঘণ্টা লাগবে আপনার অ্যাকাউন্টে টাকা পাঠাতে। ধন্যবাদ!</p>
+                        <a href="dashboard.html" class="btn-home">হোমে ফিরে যান</a>
+                    </div>
+                `;
+
             } catch (error) {
                 alert("ত্রুটি: " + error.message);
+                submitBtn.disabled = false;
+                submitBtn.innerText = "উইথড্র রিকোয়েস্ট পাঠান";
             }
-        });
+        };
     </script>
 
     <script>
@@ -502,7 +375,6 @@
             .then(response => response.text())
             .then(data => {
                 document.getElementById('header-container').innerHTML = data;
-                
                 const menuBtn = document.getElementById('menuBtn');
                 const sidebar = document.getElementById('sidebar');
                 if(menuBtn && sidebar) {
@@ -513,4 +385,4 @@
             });
     </script>
 </body>
-                    </html>
+</html>
