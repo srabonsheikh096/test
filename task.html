@@ -309,9 +309,9 @@
         // প্ল্যান অনুযায়ী টাস্ক লিমিট এবং প্রতি টাস্কে আয়ের পরিমাণ
         const planConfig = {
             "free": { limit: 0, reward: 0 },
-            "basic": { limit: 5, reward: 2 },
-            "premium": { limit: 10, reward: 3 },
-            "pro": { limit: 15, reward: 5 }
+            "basic": { limit: 10, reward: 3 },
+            "premium": { limit: 10, reward: 6 },
+            "pro": { limit: 10, reward: 9 }
         };
 
         let currentLimit = 0;
@@ -338,8 +338,8 @@
                             currentLimit = planConfig[planKey].limit;
                             currentReward = planConfig[planKey].reward;
                         } else {
-                            currentLimit = 5;
-                            currentReward = 2;
+                            currentLimit = 0;
+                            currentReward = 0;
                         }
 
                         document.getElementById('rewardPerTaskDisplay').innerText = `৳ ${currentReward}`;
