@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Click2Cash</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #ffffff;
+            min-height: 100vh;
+        }
+
+        /* Dashboard Header */
+        .dash-header {
+            background: #020617;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1e293b;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .company-brand a {
+            text-decoration: none;
+        }
+
+        /* Logo Styling with Two Colors */
+        .company-brand h1 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #38bdf8; /* Click অংশের রঙ */
+            letter-spacing: 0.5px;
+            transition: opacity 0.3s;
+        }
+
+        .company-brand h1 span {
+            color: #5eead4; /* 2Cash অংশের রঙ (પેস্ট) */
+        }
+
+        .company-brand h1:hover {
+            opacity: 0.9;
+        }
+
+        /* Menu Button */
+        .menu-toggle-btn {
+            background: #1e293b;
+            border: 1px solid #334155;
+            color: #5eead4;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle-btn:hover {
+            background: #334155;
+            color: #38bdf8;
+            border-color: #38bdf8;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            position: fixed;
+            top: 65px; /* হেডার এর নিচ থেকে শুরু হবে */
+            right: -280px; /* ডিফল্টভাবে স্ক্রিনের বাইরে থাকবে */
+            width: 280px;
+            height: calc(100vh - 65px);
+            background: #1e293b;
+            border-left: 1px solid #334155;
+            transition: right 0.3s ease-in-out;
+            z-index: 999;
+            padding: 20px 0;
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.4);
+        }
+
+        /* যখন সাইডবার ওপেন হবে */
+        .sidebar.active {
+            right: 0;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            padding: 0 20px;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-menu li a {
+            display: block;
+            padding: 12px 15px;
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 0.95rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-menu li a:hover {
+            background: #0f172a;
+            color: #5eead4;
+            padding-left: 20px;
+        }
+
+        /* Main Content Area Preview */
+        .main-content {
+            margin-top: 100px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .main-content h2 {
+            color: #ffffff;
+            margin-bottom: 10px;
+        }
+
+        .main-content p {
+            color: #94a3b8;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <header class="dash-header">
+        <div class="company-brand">
+            <a href="dashboard.html">
+                <h1>Click <span>2 Cash</span></h1>
+            </a>
+        </div>
+        <button class="menu-toggle-btn" id="menuBtn" aria-label="Toggle Menu">
+            ☰
+        </button>
+    </header>
+
+    <!-- Sidebar Section -->
+    <aside class="sidebar" id="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="dashboard.html">🏠 ড্যাশবোর্ড হোম</a></li>
+            <li><a href="task.html"> 📃 টাস্ক</a></li>
+            <li><a href="deposit.html">💳 ডিপোজিট করুন</a></li>
+            <li><a href="withdraw.html">💸 উইথড্র করুন</a></li>
+            <li><a href="profile.html">👤 প্রোফাইল</a></li>
+            <li><a href="login.html" style="color: #f87171;">🚪 লগআউট</a></li>
+        </ul>
+    </aside>
+    !-- JavaScript for Toggle Functionality -->
+    <script>
+        const menuBtn = document.getElementById('menuBtn');
+        const sidebar = document.getElementById('sidebar');
+
+        menuBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+        });
+
+        // পেজে যেকোনো জায়গায় ক্লিক করলে সাইডবার বন্ধ হয়ে যাওয়ার জন্য
+        document.addEventListener('click', (event) => {
+            if (!sidebar.contains(event.target) && !menuBtn.contains(event.target)) {
+                sidebar.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>

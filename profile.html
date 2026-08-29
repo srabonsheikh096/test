@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+ <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Settings - Click2Cash</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Profile Main Container */
+        .profile-container {
+            max-width: 900px;
+            width: 90%;
+            margin: 100px auto 40px auto;
+            flex: 1;
+        }
+
+        .section-header {
+            margin-bottom: 25px;
+        }
+
+        .section-header h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .section-header h2 span {
+            color: #5eead4;
+        }
+
+        .section-header p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        /* Profile Card Grid */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 25px;
+        }
+
+        .profile-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #5eead4;
+        }
+
+        .form-group input:disabled {
+            background: #131c2e;
+            color: #64748b;
+            cursor: not-allowed;
+        }
+
+        /* Action Buttons */
+        .btn-save {
+            background: #5eead4;
+            color: #0f172a;
+            padding: 12px 25px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn-save:hover {
+            background: #38bdf8;
+            transform: translateY(-2px);
+        }
+
+        /* Referral Link Box */
+        .referral-box {
+            display: flex;
+            gap: 10px;
+        }
+
+        .referral-box input {
+            flex: 1;
+        }
+
+        .btn-copy {
+            background: #334155;
+            color: #ffffff;
+            border: none;
+            padding: 0 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-copy:hover {
+            background: #475569;
+        }
+
+        /* Simple Copyright Footer */
+        footer {
+            background: #020617;
+            color: #64748b;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #1e293b;
+            margin-top: auto;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dynamic Header Container -->
+    <div id="header-container"></div>
+
+    <!-- Main Profile Container -->
+    <main class="profile-container">
+        
+        <div class="section-header">
+            <h2>প্রোফাইল <span>সেটিংস</span></h2>
+            <p>আপনার অ্যাকাউন্ট সংক্রান্ত তথ্য এবং সেটিংস আপডেট করুন</p>
+        </div>
+
+        <div class="profile-grid">
+            
+            <!-- Personal Information Card -->
+            <div class="profile-card">
+                <div class="card-title">👤 ব্যক্তিগত তথ্য</div>
+                
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label>ইউজারনেম (Username)</label>
+                        <input type="text" id="usernameInput" required placeholder="আপনার ইউজারনেম">
+                    </div>
+
+                    <div class="form-group">
+                        <label>ইমেইল এড্রেস (Email - পরিবর্তনযোগ্য নয়)</label>
+                        <input type="email" id="emailInput" disabled>
+                    </div>
+
+                    <div class="form-group">
+                        <label>ফোন নম্বর (Phone Number)</label>
+                        <input type="tel" id="phoneInput" required placeholder="01XXXXXXXXX">
+                    </div>
+
+                    <button type="submit" class="btn-save">পরিবর্তন সেভ করুন</button>
+                </form>
+            </div>
+
+            <!-- Password Change Card -->
+            <div class="profile-card">
+                <div class="card-title">🔒 পাসওয়ার্ড পরিবর্তন করুন</div>
+                
+                <form id="passwordForm">
+                    <div class="form-group">
+                        <label>বর্তমান পাসওয়ার্ড (Current Password)</label>
+                        <input type="password" id="currentPasswordInput" required placeholder="আপনার বর্তমান পাসওয়ার্ড দিন">
+                    </div>
+
+                    <div class="form-group">
+                        <label>নতুন পাসওয়ার্ড (New Password)</label>
+                        <input type="password" id="newPasswordInput" required placeholder="কমপক্ষে ৬ অক্ষরের নতুন পাসওয়ার্ড দিন">
+                    </div>
+
+                    <button type="submit" class="btn-save">পাসওয়ার্ড আপডেট করুন</button>
+                </form>
+            </div>
+
+            <!-- Referral Link Card -->
+            <div class="profile-card">
+                <div class="card-title">🔗 আপনার রেফারাল লিংক</div>
+                <div class="form-group">
+                    <label>বন্ধুদের সাথে শেয়ার করে বোনাস অর্জন করুন</label>
+                    <div class="referral-box">
+                        <input type="text" id="referralLinkInput" readonly value="লোড হচ্ছে...">
+                        <button type="button" class="btn-copy" id="copyBtn">কপি করুন</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        &copy; ২০২৬ Click2Cash. All Rights Reserved.
+    </footer>
+
+    <!-- Firebase Logic & Realtime Sync -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyByuYaP1fcGz0PJJ3r3QPWt0PNRSR9EUO0",
+            authDomain: "click2cash-134bf.firebaseapp.com",
+            projectId: "click2cash-134bf",
+            storageBucket: "click2cash-134bf.firebasestorage.app",
+            messagingSenderId: "142040665028",
+            appId: "1:142040665028:web:6c7f34b8c47cbd02e6f291"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const profileForm = document.getElementById('profileForm');
+        const passwordForm = document.getElementById('passwordForm');
+        const usernameInput = document.getElementById('usernameInput');
+        const emailInput = document.getElementById('emailInput');
+        const phoneInput = document.getElementById('phoneInput');
+        const currentPasswordInput = document.getElementById('currentPasswordInput');
+        const newPasswordInput = document.getElementById('newPasswordInput');
+        const referralLinkInput = document.getElementById('referralLinkInput');
+        const copyBtn = document.getElementById('copyBtn');
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                
+                // রিয়েল-টাইমে ফায়ারস্টোর থেকে ডাটা নিয়ে আসা
+                onSnapshot(doc(db, "users", user.uid), (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        usernameInput.value = data.username || "";
+                        emailInput.value = data.email || user.email;
+                        phoneInput.value = data.phone || "";
+                        
+                        // ইউজারের নিজস্ব ইউজারনেম দিয়ে রেফারাল লিংক তৈরি
+                        const username = data.username || "user";
+                        const baseUrl = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+                        referralLinkInput.value = `${baseUrl}/signup.html?ref=${username}`;
+                    }
+                });
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        // প্রোফাইল আপডেট
+        profileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            try {
+                const userRef = doc(db, "users", currentUser.uid);
+                await updateDoc(userRef, {
+                    username: usernameInput.value.trim(),
+                    phone: phoneInput.value.trim()
+                });
+                alert("প্রোফাইল সফলভাবে আপডেট হয়েছে!");
+            } catch (error) {
+                alert("ত্রুটি: " + error.message);
+            }
+        });
+
+        // পাসওয়ার্ড পরিবর্তন
+        passwordForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const currentPassword = currentPasswordInput.value;
+            const newPassword = newPasswordInput.value;
+
+            if (newPassword.length < 6) {
+                alert("নতুন পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!");
+                return;
+            }
+
+            try {
+                // বর্তমান পাসওয়ার্ড সঠিক কিনা যাচাই করতে রি-অথেন্টিকেট করা হচ্ছে
+                const credential = EmailAuthProvider.credential(currentUser.email, currentPassword);
+                await reauthenticateWithCredential(currentUser, credential);
+
+                // ফায়ারবেস অথ-এ পাসওয়ার্ড আপডেট করা
+                await updatePassword(currentUser, newPassword);
+                
+                alert("পাসওয়ার্ড সফলভাবে পরিবর্তন করা হয়েছে!");
+                passwordForm.reset();
+            } catch (error) {
+                alert("পাসওয়ার্ড পরিবর্তন ব্যর্থ হয়েছে! বর্তমান পাসওয়ার্ড সঠিক আছে কিনা নিশ্চিত করুন।\nত্রুটি: " + error.message);
+            }
+        });
+
+        // কপি বাটন ফাংশন
+        copyBtn.addEventListener('click', () => {
+            referralLinkInput.select();
+            navigator.clipboard.writeText(referralLinkInput.value).then(() => {
+                copyBtn.innerText = "কপি হয়েছে!";
+                setTimeout(() => {
+                    copyBtn.innerText = "কপি করুন";
+                }, 2000);
+            }).catch(err => {
+                alert("কপি করতে সমস্যা হয়েছে!");
+            });
+        });
+    </script>
+
+    <!-- Header Load Script -->
+    <script>
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header-container').innerHTML = data;
+                
+                const menuBtn = document.getElementById('menuBtn');
+                const sidebar = document.getElementById('sidebar');
+                if(menuBtn && sidebar) {
+                    menuBtn.addEventListener('click', () => {
+                        sidebar.classList.toggle('active');
+                    });
+                }
+            });
+    </script>
+</body>
+</html>

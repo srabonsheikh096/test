@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click2Cash - বিজ্ঞাপন দেখুন এবং টাকা আয় করুন</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #ffffff;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(180deg, #020617 0%, #1e3a8a 50%, #0f172a 100%);
+        }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 25px;
+            line-height: 1.3;
+        }
+
+        .hero h1 span {
+            color: #38bdf8;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            max-width: 650px;
+            margin-bottom: 35px;
+            color: #cbd5e1;
+            font-weight: 400;
+        }
+
+        .hero-btn {
+            background: #5eead4;
+            color: #0f172a;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 40px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            box-shadow: 0 0 25px rgba(94, 234, 212, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 35px rgba(94, 234, 212, 0.8);
+            background: #2dd4bf;
+        }
+
+        /* New Professional Stats Section */
+        .stats-section {
+            padding: 70px 20px;
+            background-color: #ffffff;
+            color: #0f172a;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .stat-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 30px 20px;
+            border-radius: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-5px);
+            border-color: #5eead4;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: #0f172a;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        /* Pricing Section (3 Plans) */
+        .pricing {
+            padding: 90px 20px;
+            text-align: center;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            color: #0f172a;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1100px;
+            margin: 40px auto 0 auto;
+        }
+
+        .pricing-card {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 40px 25px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, border-color 0.3s ease;
+            text-align: left;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            border-color: #5eead4;
+        }
+
+        .pricing-card.popular {
+            border-color: #0284c7;
+            box-shadow: 0 15px 35px rgba(2, 132, 199, 0.15);
+        }
+
+        .popular-badge {
+            position: absolute;
+            top: -15px;
+            right: 25px;
+            background: #0284c7;
+            color: #ffffff;
+            padding: 5px 15px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .plan-icon {
+            width: 55px;
+            height: 55px;
+            background: #ccfbf1;
+            color: #0d9488;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+        }
+
+        .pricing-card h3 {
+            font-size: 1.6rem;
+            color: #0f172a;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: #0284c7;
+            margin-bottom: 20px;
+        }
+
+        .pricing-card p {
+            color: #64748b;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
+        }
+
+        .plan-btn {
+            display: block;
+            text-align: center;
+            background: #0f172a;
+            color: #ffffff;
+            padding: 12px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .plan-btn:hover {
+            background: #0284c7;
+        }
+
+        /* How It Works Section */
+        .how-it-works {
+            padding: 90px 20px;
+            text-align: center;
+            background-color: #ffffff;
+            color: #0f172a;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            max-width: 1000px;
+            margin: 40px auto 0 auto;
+        }
+
+        .step-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 30px 20px;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .step-card h4 {
+            font-size: 1.2rem;
+            color: #2563eb;
+            margin-bottom: 10px;
+        }
+
+        .step-card p {
+            font-size: 0.95rem;
+            color: #475569;
+        }
+
+        /* Footer */
+        footer {
+            background: #020617;
+            color: #94a3b8;
+            padding: 60px 25px 30px 25px;
+            text-align: left;
+            border-top: 1px solid #1e293b;
+        }
+
+        .footer-col {
+            max-width: 400px;
+            margin-bottom: 35px;
+        }
+
+        .footer-heading {
+            color: #38bdf8;
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            display: inline-block;
+            position: relative;
+        }
+
+        .footer-heading::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -4px;
+            width: 45px;
+            height: 2px;
+            background-color: #38bdf8;
+        }
+
+        .footer-col p {
+            color: #cbd5e1;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-top: 8px;
+        }
+
+        .footer-links-list {
+            list-style: none;
+            margin-top: 8px;
+        }
+
+        .footer-links-list li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links-list li a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 1rem;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links-list li a:hover,
+        .footer-links-list li a:active {
+            color: #38bdf8;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+            transform: translateX(5px);
+        }
+
+        .social-links {
+            list-style: none;
+            margin-top: 8px;
+        }
+
+        .social-links li {
+            margin-bottom: 12px;
+        }
+
+        .social-links li a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .social-links li a:hover,
+        .social-links li a:active {
+            color: #38bdf8;
+            text-shadow: 0 0 12px rgba(56, 189, 248, 0.7);
+            transform: translateX(5px);
+        }
+
+        .social-links svg {
+            width: 22px;
+            height: 22px;
+            fill: currentColor;
+        }
+
+        .copyright-area {
+            border-top: 1px solid #1e293b;
+            padding-top: 25px;
+            margin-top: 40px;
+            text-align: center;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>বিজ্ঞাপন দেখুন<br>এবং সহজ উপায়ে <span>টাকা আয় করুন</span></h1>
+        <p>Click2Cash-এ প্রতিদিন ছোট ছোট বিজ্ঞাপন দেখে এবং সহজ কাজ সম্পন্ন করে ঘরে বসেেই উপার্জন করুন। বিশ্বস্ত ও দ্রুত পেমেন্ট সুবিধা।</p>
+        <a href="signup.html" class="hero-btn">এখনই শুরু করুন</a>
+    </section>
+
+    <!-- Professional Stats Section -->
+    <section class="stats-section">
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-icon">👥</div>
+                <div class="stat-number">২৫,০০+</div>
+                <div class="stat-label">সক্রিয় মেম্বার</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">💳</div>
+                <div class="stat-number">৳১ লাখ+</div>
+                <div class="stat-label">মোট পেমেন্ট প্রদান</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-number">৯৮.৯%</div>
+                <div class="stat-label">দ্রুত পেমেন্ট রেট</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-number">৪.৯/৫</div>
+                <div class="stat-label">ইউজার রেটিং</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section (3 Plans: Basic, Premium, Pro) -->
+    <section class="pricing">
+        <h2 class="section-title">মেম্বারশিপ প্ল্যান</h2>
+        <p style="color: #64748b;">আপনার আয়ের গতি বাড়িয়ে নিন পছন্দমতো প্ল্যান বেছে নিয়ে।</p>
+        
+        <div class="pricing-grid">
+            <!-- Basic Plan -->
+            <div class="pricing-card">
+                <div class="plan-icon">🌱</div>
+                <h3>Basic Plan</h3>
+                <div class="price">৳৮০০ <span style="font-size: 1rem; color: #64748b; font-weight: normal;">/ ৬ মাস</span></div>
+                <p>নতুনদের জন্য আদর্শ। প্রতিদিন সীমিত বিজ্ঞাপন দেখে প্রতিদিনের ছোট আয় শুরু করুন।</p>
+                <a href="signup.html" class="plan-btn">সাবস্ক্রাইব করুন</a>
+            </div>
+
+            <!-- Premium Plan (Most Popular) -->
+            <div class="pricing-card popular">
+                <div class="popular-badge">Most Popular</div>
+                <div class="plan-icon">⭐</div>
+                <h3>Premium Plan</h3>
+                <div class="price">৳১,৬০০ <span style="font-size: 1rem; color: #64748b; font-weight: normal;">/  ৪ মাস</span></div>
+                <p>সবচেয়ে জনপ্রিয়। দ্বিগুণ রিওয়ার্ড, দ্রুত পেমেন্ট প্রসেসিং এবং স্পেশাল টাস্ক সুবিধা।</p>
+                <a href="signup.html" class="plan-btn" style="background: #0284c7;">সাবস্ক্রাইব করুন</a>
+            </div>
+
+            <!-- Pro Plan -->
+            <div class="pricing-card">
+                <div class="plan-icon">👑</div>
+                <h3>Pro Plan</h3>
+                <div class="price">৳২,৮০০ <span style="font-size: 1rem; color: #64748b; font-weight: normal;">/ ৪ মাস</span></div>
+                <p>প্রফেশনাল আর্নারদের জন্য। সর্বোচ্চ কমিশন রেট, ভিআইপি সাপোর্ট ও সুযোগ।</p>
+                <a href="signup.html" class="plan-btn">সাবস্ক্রাইব করুন</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="how-it-works">
+        <h2 class="section-title">কিভাবে কাজ করে?</h2>
+        <p style="color: #64748b;">চারটি সহজ ধাপে আপনার আয় নিশ্চিত করুন।</p>
+        <div class="steps-container">
+            <div class="step-card">
+                <h4>১. অ্যাকাউন্ট খুলুন</h4>
+                <p>সহজে ইমেইল দিয়ে আপনার ফ্রি অ্যাকাউন্ট তৈরি করুন।</p>
+            </div>
+            <div class="step-card">
+                <h4>২. অ্যাড দেখুন</h4>
+                <p>১৫ সেকেন্ডের টাইমার দিয়ে প্রতিদিনের বিজ্ঞাপনগুলো দেখুন।</p>
+            </div>
+            <div class="step-card">
+                <h4>৩. রেফার করুন</h4>
+                <p>আপনার লিংক শেয়ার করে বন্ধুদের থেকে প্যাসিভ কমিশন পান।</p>
+            </div>
+            <div class="step-card">
+                <h4>৪. টাকা তুলুন</h4>
+                <p>নিরাপদে আপনার ওয়ালেটে পেমেন্ট রিকোয়েস্ট পাঠান।</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-col">
+            <div class="footer-heading">Click 2 Cash</div>
+            <p>আমরা প্রদান করি নির্ভরযোগ্য এবং মানসম্মত ডিজিটাল সেবাসমূহ। আমাদের সাথেই থাকুন এবং নতুন অভিজ্ঞতার অংশ হন।</p>
+        </div>
+
+        <div class="footer-col" style="margin-top: 30px;">
+            <div class="footer-heading">Quick Links</div>
+            <ul class="footer-links-list">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="membership.html">Membership</a></li>
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="login.html">Login</a></li>
+                <li><a href="signup.html">Sign Up</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col" style="margin-top: 30px;">
+            <div class="footer-heading">Privacy & Terms</div>
+            <ul class="footer-links-list">
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Refund Policy</a></li>
+                <li><a href="#">FAQ</a></li>
+            </ul>
+        </div>
+
+        <div class="footer-col" style="margin-top: 30px;">
+            <div class="footer-heading">Contact Us</div>
+            <ul class="social-links">
+                <li>
+                    <a href="#" style="color: #1877f2;">
+                        <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        Facebook
+                    </a>
+                </li>
+                <li>
+                    <a href="#" style="color: #229ed9;">
+                        <svg viewBox="0 0 24 24"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.141.119.098.152.228.163.33.016.116.033.378.019.589z"/></svg>
+                        Telegram
+                    </a>
+                </li>
+                <li>
+                    <a href="#" style="color: #25d366;">
+                        <svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.124-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                        WhatsApp
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <div class="copyright-area">
+            &copy; ২০২৬ Click2Cash. All Rights Reserved.
+        </div>
+    </footer>
+
+</body>
+</html>

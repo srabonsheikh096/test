@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Click2Cash</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .company-header {
+            background: #020617;
+            padding: 18px 40px;
+            text-align: left;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .company-header a {
+            text-decoration: none;
+        }
+
+        .company-header h1 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #38bdf8;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            transition: color 0.3s;
+        }
+
+        .company-header h1:hover {
+            color: #5eead4;
+        }
+
+        .signup-container {
+            max-width: 480px;
+            width: 90%;
+            margin: 50px auto;
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .signup-header-text {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .signup-header-text h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .signup-header-text h2 span {
+            color: #5eead4;
+        }
+
+        .signup-header-text p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #5eead4;
+        }
+
+        .btn-signup {
+            display: block;
+            width: 100%;
+            background: #5eead4;
+            color: #0f172a;
+            padding: 14px 0;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-signup:hover {
+            background: #38bdf8;
+            transform: translateY(-2px);
+        }
+
+        /* Success Card Styling */
+        .success-card {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .success-icon {
+            font-size: 3.5rem;
+            color: #5eead4;
+            margin-bottom: 15px;
+        }
+
+        .success-card h3 {
+            font-size: 1.5rem;
+            color: #ffffff;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .success-card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
+
+        .btn-login-redirect {
+            display: inline-block;
+            background: #5eead4;
+            color: #0f172a;
+            padding: 12px 30px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn-login-redirect:hover {
+            background: #38bdf8;
+            transform: translateY(-2px);
+        }
+
+        .login-redirect {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.95rem;
+            color: #94a3b8;
+        }
+
+        .login-redirect a {
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .login-redirect a:hover {
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+        }
+
+        footer {
+            background: #020617;
+            color: #64748b;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #1e293b;
+            margin-top: auto;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="company-header">
+        <a href="index.html">
+            <h1>Click2Cash</h1>
+        </a>
+    </header>
+
+    <div class="signup-container">
+        <!-- ফর্ম সেকশন -->
+        <div id="formSection">
+            <div class="signup-header-text">
+                <h2>সাইন আপ করুন <span>এখনই</span></h2>
+                <p>আপনার তথ্য দিয়ে অ্যাকাউন্ট তৈরি করুন</p>
+            </div>
+
+            <form id="signupForm">
+                <div class="form-group">
+                    <label>ইউজারনেম (Username)</label>
+                    <input type="text" id="username" required placeholder="আপনার ইউজারনেম লিখুন">
+                </div>
+
+                <div class="form-group">
+                    <label>ইমেইল এড্রেস (Email)</label>
+                    <input type="email" id="email" required placeholder="example@gmail.com">
+                </div>
+
+                <div class="form-group">
+                    <label>ফোন নম্বর (Phone Number)</label>
+                    <input type="tel" id="phone" required placeholder="01XXXXXXXXX">
+                </div>
+
+                <div class="form-group">
+                    <label>পাসওয়ার্ড (Password)</label>
+                    <input type="password" id="password" required placeholder="কমপক্ষে ৬ ডিজিটের পাসওয়ার্ড">
+                </div>
+
+                <div class="form-group">
+                    <label>কনফার্ম পাসওয়ার্ড (Confirm Password)</label>
+                    <input type="password" id="confirmPassword" required placeholder="পুনরায় পাসওয়ার্ড দিন">
+                </div>
+
+                <div class="form-group">
+                    <label>রেফারাল ইউজারনেম (Referral Username - Optional)</label>
+                    <input type="text" id="referralId" placeholder="রেফারকারীর ইউজারনেম">
+                </div>
+
+                <button type="submit" class="btn-signup">একাউন্ট তৈরি করুন</button>
+            </form>
+
+            <div class="login-redirect">
+                অ্যাকাউন্ট আছে? <a href="login.html">Login করুন ➡</a>
+            </div>
+        </div>
+
+        <!-- সফল হওয়ার পর দেখানোর সাকসেস বক্স (শুরুতে হাইড থাকবে) -->
+        <div id="successSection" style="display: none;" class="success-card">
+            <div class="success-icon">✅</div>
+            <h3>রেজিস্ট্রেশন সফল হয়েছে!</h3>
+            <p>আপনার অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে। এখন আপনার একাউন্টে প্রবেশ করতে নিচের বাটনে ক্লিক করুন।</p>
+            <a href="login.html" class="btn-login-redirect">Login করুন</a>
+        </div>
+    </div>
+
+    <footer>
+        &copy; ২০২৬ Click2Cash. All Rights Reserved.
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyByuYaP1fcGz0PJJ3r3QPWt0PNRSR9EUO0",
+            authDomain: "click2cash-134bf.firebaseapp.com",
+            projectId: "click2cash-134bf",
+            storageBucket: "click2cash-134bf.firebasestorage.app",
+            messagingSenderId: "142040665028",
+            appId: "1:142040665028:web:6c7f34b8c47cbd02e6f291"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const refUser = urlParams.get('ref');
+            if (refUser) {
+                document.getElementById('referralId').value = refUser;
+            }
+        });
+
+        const signupForm = document.getElementById('signupForm');
+        const formSection = document.getElementById('formSection');
+        const successSection = document.getElementById('successSection');
+
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const referralId = document.getElementById('referralId').value.trim();
+
+            if (password !== confirmPassword) {
+                alert("পাসওয়ার্ড দুটি মিলছে না! দয়া করে চেক করুন।");
+                return;
+            }
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // ফায়ারস্টোরে ডাটা সেভ করা
+                await setDoc(doc(db, "users", user.uid), {
+                    username: username,
+                    email: email,
+                    phone: phone,
+                    referredBy: referralId || "None",
+                    referralBonusPaid: false,
+                    membership: "Free",
+                    balance: 0.00,
+                    completedTasks: 0,
+                    referralBonus: 0.00,
+                    createdAt: new Date().toISOString()
+                });
+
+                // রেজিস্ট্রেশন সফল হলে ফর্ম লুকিয়ে সাকসেস মেসেজ ও বাটন দেখানো
+                formSection.style.display = 'none';
+                successSection.style.display = 'block';
+
+            } catch (error) {
+                alert("ত্রুটি: " + error.message);
+            }
+        });
+    </script>
+</body>
+</html>

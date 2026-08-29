@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deposit & Upgrade Plan - Click2Cash</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Deposit Main Container */
+        .deposit-container {
+            max-width: 900px;
+            width: 90%;
+            margin: 100px auto 40px auto;
+            flex: 1;
+        }
+
+        .section-header {
+            margin-bottom: 25px;
+        }
+
+        .section-header h2 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+
+        .section-header h2 span {
+            color: #5eead4;
+        }
+
+        .section-header p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        /* Card Style */
+        .deposit-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            margin-bottom: 25px;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Plan Selection Grid */
+        .plan-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .plan-option {
+            background: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 12px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .plan-option:hover {
+            border-color: #5eead4;
+        }
+
+        .plan-option.selected {
+            border-color: #5eead4;
+            background: rgba(94, 234, 212, 0.05);
+            box-shadow: 0 0 15px rgba(94, 234, 212, 0.2);
+        }
+
+        .plan-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .plan-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #5eead4;
+        }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .form-group select, .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group select:focus, .form-group input:focus {
+            outline: none;
+            border-color: #5eead4;
+        }
+
+        .form-group input:disabled {
+            background: #131c2e;
+            color: #5eead4;
+            font-weight: 700;
+            cursor: not-allowed;
+        }
+
+        /* Payment Instruction Box */
+        .instruction-box {
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #38bdf8;
+            line-height: 1.5;
+        }
+
+        /* Pay Now Button */
+        .btn-pay {
+            background: #5eead4;
+            color: #0f172a;
+            width: 100%;
+            padding: 15px;
+            font-weight: 800;
+            font-size: 1.05rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            display: none;
+        }
+
+        .btn-pay:hover {
+            background: #38bdf8;
+            transform: translateY(-2px);
+        }
+
+        /* Custom Stylish Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(5px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-box {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 30px;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: translateY(0);
+        }
+
+        .modal-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 12px;
+        }
+
+        .modal-desc {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .btn-home {
+            background: #5eead4;
+            color: #0f172a;
+            width: 100%;
+            padding: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+
+        .btn-home:hover {
+            background: #38bdf8;
+        }
+
+        /* Footer */
+        footer {
+            background: #020617;
+            color: #64748b;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #1e293b;
+            margin-top: auto;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Dynamic Header Container -->
+    <div id="header-container"></div>
+
+    <!-- Main Deposit Container -->
+    <main class="deposit-container">
+        
+        <div class="section-header">
+            <h2>প্ল্যান নির্বাচন ও <span>ডিপোজিট</span></h2>
+            <p>আপনার পছন্দের মেম্বারশিপ প্ল্যান বেছে নিন এবং পেমেন্ট সম্পন্ন করুন</p>
+        </div>
+
+        <form id="depositForm">
+            
+            <!-- Step 1: Select Plan -->
+            <div class="deposit-card">
+                <div class="card-title">📦 একটি প্ল্যান বেছে নিন (Select Plan)</div>
+                
+                <div class="plan-grid">
+                    <div class="plan-option" onclick="selectPlan('Basic', 800, this)">
+                        <div class="plan-name">Basic Plan</div>
+                        <div class="plan-price">৳ 800</div>
+                    </div>
+                    <div class="plan-option" onclick="selectPlan('Premium', 1600, this)">
+                        <div class="plan-name">Premium Plan</div>
+                        <div class="plan-price">৳ 1600</div>
+                    </div>
+                    <div class="plan-option" onclick="selectPlan('Pro', 2800, this)">
+                        <div class="plan-name">Pro Plan</div>
+                        <div class="plan-price">৳ 2800</div>
+                    </div>
+                </div>
+
+                <input type="hidden" id="selectedPlanInput" required>
+            </div>
+
+            <!-- Step 2: Payment Details -->
+            <div class="deposit-card" id="paymentDetailsCard" style="display: none;">
+                <div class="card-title">💳 পেমেন্ট তথ্য দিন</div>
+
+                <div class="instruction-box">
+                    <strong>নির্দেশনা:</strong> নিচে দেওয়া আমাদের মার্চেন্ট/পার্সোনাল নম্বরে টাকা পাঠিয়ে সঠিক তথ্য দিয়ে রিকোয়েস্ট সাবমিট করুন। <br>
+                    • বিকাশ/নগদ (Personal): <strong>017XXXXXXXX</strong>
+                </div>
+
+                <div class="form-group">
+                    <label>নির্বাচিত প্ল্যান ও পরিমাণ (Amount)</label>
+                    <input type="text" id="amountDisplay" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label>পেমেন্ট মাধ্যম (Payment Method)</label>
+                    <select id="paymentMethod" required>
+                        <option value="">মাধ্যম সিলেক্ট করুন</option>
+                        <option value="bKash">বিকাশ (bKash)</option>
+                        <option value="Nagad">নগদ (Nagad)</option>
+                        <option value="Rocket">রকেট (Rocket)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>যে নম্বর থেকে টাকা পাঠিয়েছেন (Sender Number)</label>
+                    <input type="tel" id="senderNumber" required placeholder="01XXXXXXXXX">
+                </div>
+
+                <div class="form-group">
+                    <label>ট্রানজেকশন আইডি (TrxID)</label>
+                    <input type="text" id="trxId" required placeholder="যেমন: 9N8K7L6M54">
+                </div>
+
+                <!-- Pay Now Button -->
+                <button type="submit" class="btn-pay" id="payNowBtn">Pay Now (পেমেন্ট রিকোয়েস্ট পাঠান)</button>
+            </div>
+
+        </form>
+
+    </main>
+
+    <!-- Custom Success Modal Popup -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-box">
+            <div class="modal-icon">🎉</div>
+            <div class="modal-title">সফল হয়েছে!</div>
+            <div class="modal-desc">
+                আপনার ডিপোজিট রিকোয়েস্ট সফলভাবে জমা হয়েছে! অ্যাডমিন যাচাই করার পর প্ল্যান আপডেট করা হবে।
+            </div>
+            <a href="dashboard.html" class="btn-home">হোমে ফিরে যান</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        &copy; ২০২৬ Click2Cash. All Rights Reserved.
+    </footer>
+
+    <!-- Firebase & Logic Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyByuYaP1fcGz0PJJ3r3QPWt0PNRSR9EUO0",
+            authDomain: "click2cash-134bf.firebaseapp.com",
+            projectId: "click2cash-134bf",
+            storageBucket: "click2cash-134bf.firebasestorage.app",
+            messagingSenderId: "142040665028",
+            appId: "1:142040665028:web:6c7f34b8c47cbd02e6f291"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        // Global variables for plan selection
+        window.selectPlan = function(planName, planPrice, element) {
+            document.querySelectorAll('.plan-option').forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+
+            document.getElementById('selectedPlanInput').value = planName;
+            document.getElementById('amountDisplay').value = `৳ ${planPrice} (${planName} Plan)`;
+
+            document.getElementById('paymentDetailsCard').style.display = 'block';
+            document.getElementById('payNowBtn').style.display = 'block';
+            
+            document.getElementById('paymentDetailsCard').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        // Handle Deposit Submission
+        const depositForm = document.getElementById('depositForm');
+        depositForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!currentUser) return;
+
+            const plan = document.getElementById('selectedPlanInput').value;
+            const amountText = document.getElementById('amountDisplay').value;
+            const amount = amountText.includes('800') ? 800 : amountText.includes('1600') ? 1600 : 2800;
+            const method = document.getElementById('paymentMethod').value;
+            const sender = document.getElementById('senderNumber').value.trim();
+            const trxId = document.getElementById('trxId').value.trim();
+
+            try {
+                await addDoc(collection(db, "deposits"), {
+                    uid: currentUser.uid,
+                    email: currentUser.email,
+                    plan: plan,
+                    amount: amount,
+                    paymentMethod: method,
+                    senderNumber: sender,
+                    trxId: trxId,
+                    status: "Pending",
+                    timestamp: serverTimestamp()
+                });
+
+                // Show Custom Style Modal instead of alert
+                document.getElementById('successModal').classList.add('active');
+            } catch (error) {
+                alert("ত্রুটি: " + error.message);
+            }
+        });
+    </script>
+
+    <!-- Header Load Script -->
+    <script>
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header-container').innerHTML = data;
+                
+                const menuBtn = document.getElementById('menuBtn');
+                const sidebar = document.getElementById('sidebar');
+                if(menuBtn && sidebar) {
+                    menuBtn.addEventListener('click', () => {
+                        sidebar.classList.toggle('active');
+                    });
+                }
+            });
+    </script>
+</body>
+</html>

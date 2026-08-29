@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdraw - Click2Cash</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .withdraw-container {
+            max-width: 600px;
+            width: 90%;
+            margin: 100px auto 40px auto;
+            flex: 1;
+        }
+
+        .withdraw-card {
+            background: #1e293b;
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+
+        .withdraw-card h2 {
+            font-size: 1.6rem;
+            color: #ffffff;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+
+        .withdraw-card h2 span {
+            color: #5eead4;
+        }
+
+        .withdraw-card p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        .balance-box-sm {
+            background: rgba(94, 234, 212, 0.05);
+            border: 1px solid rgba(94, 234, 212, 0.2);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .balance-box-sm span {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        .balance-box-sm strong {
+            color: #5eead4;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            border-color: #5eead4;
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        .btn-withdraw {
+            width: 100%;
+            background: #5eead4;
+            color: #0f172a;
+            padding: 14px;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-withdraw:hover {
+            background: #38bdf8;
+            transform: translateY(-2px);
+        }
+
+        .notice-box {
+            margin-top: 20px;
+            background: rgba(56, 189, 248, 0.05);
+            border-left: 3px solid #38bdf8;
+            padding: 12px 15px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+
+        /* Success UI Screen */
+        .success-screen {
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        .success-icon {
+            font-size: 3.5rem;
+            color: #5eead4;
+            margin-bottom: 15px;
+        }
+
+        .success-screen h3 {
+            font-size: 1.4rem;
+            color: #ffffff;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .success-screen p {
+            color: #94a3b8;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .btn-home {
+            display: inline-block;
+            background: #5eead4;
+            color: #0f172a;
+            padding: 12px 30px;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn-home:hover {
+            background: #38bdf8;
+            transform: translateY(-2px);
+        }
+
+        footer {
+            background: #020617;
+            color: #64748b;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #1e293b;
+            margin-top: auto;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header-container"></div>
+
+    <main class="withdraw-container">
+        <div class="withdraw-card" id="cardContent">
+            <h2>টাকা <span>উইথড্র</span> করুন</h2>
+            <p>আপনার আয়কৃত টাকা খুব দ্রুত আপনার বিকাশ বা নগদে পেমেন্ট নিন।</p>
+
+            <div class="balance-box-sm">
+                <span>বর্তমান মূল ব্যালেন্স:</span>
+                <strong id="userAvailableBalance">৳ 0.00</strong>
+            </div>
+
+            <form id="withdrawForm" onsubmit="handleWithdraw(event)">
+                <div class="form-group">
+                    <label>পেমেন্ট মাধ্যম (Payment Method)</label>
+                    <select class="form-control" id="withdrawMethod" required>
+                        <option value="" disabled selected>মাধ্যম সিলেক্ট করুন</option>
+                        <option value="Bkash">বিকাশ (Bkash)</option>
+                        <option value="Nagad">নগদ (Nagad)</option>
+                        <option value="Rocket">রকেট (Rocket)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>অ্যাকাউন্ট টাইপ (Account Type)</label>
+                    <select class="form-control" id="accountType" required>
+                        <option value="Personal" selected>পার্সোনাল (Personal)</option>
+                        <option value="Agent">এজেন্ট (Agent)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>একাউন্ট নম্বর (Account Number)</label>
+                    <input type="number" class="form-control" id="withdrawNumber" placeholder="যেমন: 01712345678" required>
+                </div>
+
+                <div class="form-group">
+                    <label>টাকার পরিমাণ (Amount in BDT)</label>
+                    <input type="number" class="form-control" id="withdrawAmount" placeholder="সর্বনিম্ন ১০০ টাকা" min="100" required>
+                </div>
+
+                <button type="submit" class="btn-withdraw" id="submitBtn">উইথড্র রিকোয়েস্ট পাঠান</button>
+            </form>
+
+            <div class="notice-box">
+                <strong>নিয়মাবলী:</strong> সর্বনিম্ন উইথড্র ৩০০ টাকা। রিকোয়েস্ট করার ২৪ ঘণ্টার মধ্যে পেমেন্ট কমপ্লিট করা হয়। ভুল নম্বর প্রদান করলে কর্তৃপক্ষ দায়ী থাকবে না।
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        &copy; ২০২৬ Click2Cash. All Rights Reserved.
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, onSnapshot, updateDoc, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyByuYaP1fcGz0PJJ3r3QPWt0PNRSR9EUO0",
+            authDomain: "click2cash-134bf.firebaseapp.com",
+            projectId: "click2cash-134bf",
+            storageBucket: "click2cash-134bf.firebasestorage.app",
+            messagingSenderId: "142040665028",
+            appId: "1:142040665028:web:6c7f34b8c47cbd02e6f291"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUserId = null;
+        let currentUserEmail = "";
+        let currentBalance = 0;
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUserId = user.uid;
+                currentUserEmail = user.email;
+
+                onSnapshot(doc(db, "users", currentUserId), (docSnap) => {
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        currentBalance = data.balance || 0;
+                        const balanceEl = document.getElementById('userAvailableBalance');
+                        if(balanceEl) {
+                            balanceEl.innerText = `৳ ${currentBalance.toFixed(2)}`;
+                        }
+                    }
+                });
+            } else {
+                window.location.href = "login.html";
+            }
+        });
+
+        window.handleWithdraw = async function(event) {
+            event.preventDefault();
+
+            const method = document.getElementById('withdrawMethod').value;
+            const accType = document.getElementById('accountType').value;
+            const number = document.getElementById('withdrawNumber').value;
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+
+            if (amount < 100) {
+                alert("সর্বনিম্ন উইথড্র পরিমাণ ১০০ টাকা হতে হবে।");
+                return;
+            }
+
+            if (amount > currentBalance) {
+                alert("আপনার অ্যাকাউন্টে পর্যাপ্ত ব্যালেন্স নেই!");
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "প্রসেসিং হচ্ছে...";
+
+            try {
+                // ১. ফায়ারস্টোরে রিকোয়েস্ট সেভ করা
+                await addDoc(collection(db, "withdraws"), {
+                    uid: currentUserId,
+                    email: currentUserEmail,
+                    method: method,
+                    accountType: accType,
+                    number: number,
+                    amount: amount,
+                    status: "Pending",
+                    timestamp: serverTimestamp()
+                });
+
+                // ২. ব্যালেন্স কেটে নেওয়া
+                const userRef = doc(db, "users", currentUserId);
+                await updateDoc(userRef, {
+                    balance: currentBalance - amount
+                });
+
+                // ৩. পপআপের পরিবর্তে সুন্দর ইন্টারফেস বা স্ক্রিন দেখানো
+                const cardContent = document.getElementById('cardContent');
+                cardContent.innerHTML = `
+                    <div class="success-screen">
+                        <div class="success-icon">✅</div>
+                        <h3>উইথড্র সফলভাবে জমা হয়েছে!</h3>
+                        <p>২৪/৪৮ ঘণ্টা লাগবে আপনার অ্যাকাউন্টে টাকা পাঠাতে। ধন্যবাদ!</p>
+                        <a href="dashboard.html" class="btn-home">হোমে ফিরে যান</a>
+                    </div>
+                `;
+
+            } catch (error) {
+                alert("ত্রুটি: " + error.message);
+                submitBtn.disabled = false;
+                submitBtn.innerText = "উইথড্র রিকোয়েস্ট পাঠান";
+            }
+        };
+    </script>
+
+    <script>
+        fetch('header.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('header-container').innerHTML = data;
+                const menuBtn = document.getElementById('menuBtn');
+                const sidebar = document.getElementById('sidebar');
+                if(menuBtn && sidebar) {
+                    menuBtn.addEventListener('click', () => {
+                        sidebar.classList.toggle('active');
+                    });
+                }
+            });
+    </script>
+</body>
+</html>
