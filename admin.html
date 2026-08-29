@@ -142,6 +142,7 @@
             padding: 25px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
             overflow-x: auto;
+            margin-bottom: 25px;
         }
 
         .card-title {
@@ -177,6 +178,38 @@
             background: rgba(51, 65, 85, 0.3);
         }
 
+        .form-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .form-input {
+            background: #0f172a;
+            color: #ffffff;
+            border: 1px solid #334155;
+            padding: 10px 15px;
+            border-radius: 8px;
+            outline: none;
+            flex: 1;
+            min-width: 200px;
+            font-size: 0.95rem;
+        }
+        .form-input:focus { border-color: #5eead4; }
+
+        .btn-add {
+            background: #5eead4;
+            color: #0f172a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .btn-add:hover { background: #2dd4bf; }
+
         .btn-approve {
             background: #10b981;
             color: #ffffff;
@@ -204,18 +237,19 @@
         }
         .btn-reject:hover { background: #dc2626; transform: translateY(-1px); }
 
-        .membership-select {
+        .membership-select, .bonus-select {
             background: #0f172a;
             color: #5eead4;
             border: 1px solid #334155;
-            padding: 8px 12px;
+            padding: 6px 10px;
             border-radius: 8px;
             font-weight: 600;
             cursor: pointer;
             outline: none;
             transition: border-color 0.3s;
+            margin-top: 4px;
         }
-        .membership-select:hover { border-color: #5eead4; }
+        .membership-select:hover, .bonus-select:hover { border-color: #5eead4; }
 
         .btn-ban {
             background: #f59e0b;
@@ -287,15 +321,15 @@
             </div>
         </div>
 
-        <!-- Tab Navigation Box (Left: Deposit & Withdraw, Right: Account Status & History) -->
+        <!-- Tab Navigation Box -->
         <div class="tab-menu-box">
-            <!-- Left Column -->
             <div class="tab-column">
                 <button class="tab-btn active" onclick="switchTab('depositTab', this)">📥 ডিপোজিট অনুরোধসমূহ</button>
                 <button class="tab-btn" onclick="switchTab('withdrawTab', this)">📤 উইথড্র অনুরোধসমূহ</button>
+                <button class="tab-btn" onclick="switchTab('bkashTab', this)">📱 বিকাশ নম্বর ম্যানেজমেন্ট</button>
             </div>
-            <!-- Right Column -->
             <div class="tab-column">
+                <button class="tab-btn" onclick="switchTab('nogodTab', this)">💰 নগদ নম্বর ম্যানেজমেন্ট</button>
                 <button class="tab-btn" onclick="switchTab('usersTab', this)">👥 ব্যবহারকারী তালিকা</button>
                 <button class="tab-btn" onclick="switchTab('historyTab', this)">📜 ইতিহাস (লগ)</button>
             </div>
@@ -315,12 +349,13 @@
                             <th>পেমেন্ট মাধ্যম</th>
                             <th>প্রেরক নম্বর</th>
                             <th>TrxID</th>
+                            <th>Referred By</th>
                             <th>স্ট্যাটাস</th>
                             <th>অ্যাকশন</th>
                         </tr>
                     </thead>
                     <tbody id="depositTableBody">
-                        <tr><td colspan="9" style="text-align: center; color: #94a3b8;">লোড হচ্ছে...</td></tr>
+                        <tr><td colspan="10" style="text-align: center; color: #94a3b8;">লোড হচ্ছে...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -361,18 +396,83 @@
                             <th>ইমেইল</th>
                             <th>ব্যালেন্স</th>
                             <th>মেম্বারশিপ ও মেয়াদ</th>
+                            <th>রেফার বোনাস ব্যালেন্স যোগ</th>
                             <th>অ্যাকাউন্ট স্ট্যাটাস</th>
                             <th>অ্যাকশন</th>
                         </tr>
                     </thead>
                     <tbody id="usersTableBody">
-                        <tr><td colspan="6" style="text-align: center; color: #94a3b8;">লোড হচ্ছে...</td></tr>
+                        <tr><td colspan="7" style="text-align: center; color: #94a3b8;">লোড হচ্ছে...</td></tr>
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Tab 4: History (Completed/Rejected Requests) -->
+        <!-- Tab 4: Bkash Numbers Management -->
+        <div id="bkashTab" class="tab-content">
+            <div class="card">
+                <div class="card-title">বিকাশ মার্চেন্ট / পার্সোনাল নম্বর যোগ করুন</div>
+                <div class="form-group">
+                    <input type="text" id="bkashNumberInput" class="form-input" placeholder="নম্বর লিখুন (যেমন: 01XXXXXXXXX)">
+                    <select id="bkashTypeInput" class="form-input" style="max-width: 180px;">
+                        <option value="Personal">Personal</option>
+                        <option value="Merchant">Merchant</option>
+                        <option value="Agent">Agent</option>
+                    </select>
+                    <button class="btn-add" onclick="addPaymentNumber('bkash')">নম্বর যোগ করুন</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">বিকাশ নম্বর তালিকা</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>নম্বর</th>
+                            <th>টাইপ</th>
+                            <th>স্ট্যাটাস</th>
+                            <th>অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bkashTableBody">
+                        <tr><td colspan="4" style="text-align: center; color: #94a3b8;">লোড হচ্ছে...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 5: Nogod Numbers Management -->
+        <div id="nogodTab" class="tab-content">
+            <div class="card">
+                <div class="card-title">নগদ মার্চেন্ট / পার্সোনাল নম্বর যোগ করুন</div>
+                <div class="form-group">
+                    <input type="text" id="nogodNumberInput" class="form-input" placeholder="নম্বর লিখুন (যেমন: 01XXXXXXXXX)">
+                    <select id="nogodTypeInput" class="form-input" style="max-width: 180px;">
+                        <option value="Personal">Personal</option>
+                        <option value="Merchant">Merchant</option>
+                        <option value="Agent">Agent</option>
+                    </select>
+                    <button class="btn-add" onclick="addPaymentNumber('nogod')">নম্বর যোগ করুন</button>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">নগদ নম্বর তালিকা</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>নম্বর</th>
+                            <th>টাইপ</th>
+                            <th>স্ট্যাটাস</th>
+                            <th>অ্যাকশন</th>
+                        </tr>
+                    </thead>
+                    <tbody id="nogodTableBody">
+                        <tr><td colspan="4" style="text-align: center; color: #94a3b8;">লোড হচ্ছে...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tab 6: History (Completed/Rejected Requests) -->
         <div id="historyTab" class="tab-content">
             <div class="card" style="margin-bottom: 25px;">
                 <div class="card-title">ডিপোজিট ইতিহাস (অনুমোদিত / প্রত্যাখ্যাত)</div>
@@ -385,11 +485,12 @@
                             <th>পরিমাণ</th>
                             <th>পেমেন্ট মাধ্যম</th>
                             <th>TrxID</th>
+                            <th>Referred By</th>
                             <th>স্ট্যাটাস</th>
                         </tr>
                     </thead>
                     <tbody id="depositHistoryBody">
-                        <tr><td colspan="7" style="text-align: center; color: #94a3b8;">ইতিহাস খালি আছে</td></tr>
+                        <tr><td colspan="8" style="text-align: center; color: #94a3b8;">ইতিহাস খালি আছে</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -424,7 +525,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, doc, updateDoc, deleteDoc, getDoc, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyByuYaP1fcGz0PJJ3r3QPWt0PNRSR9EUO0",
@@ -439,7 +540,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // অ্যাডমিন ইমেইল তালিকা (আপনার ইমেইলটি এখানে দেওয়া আছে)
         const ADMIN_EMAILS = [
             "srabonsheikh096@gmail.com",
             "ashiksheikh45@gmail.com",
@@ -452,6 +552,8 @@
         const usersTableBody = document.getElementById('usersTableBody');
         const depositHistoryBody = document.getElementById('depositHistoryBody');
         const withdrawHistoryBody = document.getElementById('withdrawHistoryBody');
+        const bkashTableBody = document.getElementById('bkashTableBody');
+        const nogodTableBody = document.getElementById('nogodTableBody');
         const adminEmailDisplay = document.getElementById('adminEmailDisplay');
         const logoutBtn = document.getElementById('logoutBtn');
 
@@ -465,7 +567,6 @@
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // চেক করুন ইউজার অনুমোদিত অ্যাডমিন কিনা
                 if (!ADMIN_EMAILS.includes(user.email)) {
                     alert("আপনার এই পেজে প্রবেশের অনুমতি নেই!");
                     window.location.href = "dashboard.html";
@@ -475,24 +576,41 @@
                 loadDeposits();
                 loadWithdraws();
                 loadUsers();
+                loadPaymentNumbers('bkash');
+                loadPaymentNumbers('nogod');
             } else {
                 window.location.href = "login.html";
             }
         });
 
+        async function getReferrerInfo(uid) {
+            if (!uid) return "কেউ না";
+            try {
+                const userDoc = await getDoc(doc(db, "users", uid));
+                if (userDoc.exists()) {
+                    const uData = userDoc.data();
+                    return uData.referredBy || uData.referBy || uData.referrer || "কেউ না";
+                }
+            } catch (e) {
+                console.error("Error fetching referrer: ", e);
+            }
+            return "কেউ না";
+        }
+
         function loadDeposits() {
-            onSnapshot(collection(db, "deposits"), (snapshot) => {
+            onSnapshot(collection(db, "deposits"), async (snapshot) => {
                 depositTableBody.innerHTML = "";
                 depositHistoryBody.innerHTML = "";
                 
                 let pendingCount = 0;
                 let historyCount = 0;
 
-                snapshot.forEach((docSnap) => {
+                for (const docSnap of snapshot.docs) {
                     const data = docSnap.data();
                     const depositId = docSnap.id;
                     const dateStr = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleString('bn-BD') : "তারিখ";
                     const status = data.status || "Pending";
+                    const referredBy = await getReferrerInfo(data.uid);
 
                     if (status === "Pending") {
                         pendingCount++;
@@ -505,6 +623,7 @@
                                 <td>${data.paymentMethod}</td>
                                 <td>${data.senderNumber}</td>
                                 <td>${data.trxId}</td>
+                                <td><span style="color: #5eead4; font-weight: 600;">${referredBy}</span></td>
                                 <td><span class="badge-pending">Pending</span></td>
                                 <td>
                                     <button class="btn-approve" onclick="updateDepositStatus('${depositId}', '${data.uid}', '${data.plan}', 'Approved')">অনুমোদন</button>
@@ -523,17 +642,18 @@
                                 <td>৳ ${data.amount}</td>
                                 <td>${data.paymentMethod}</td>
                                 <td>${data.trxId}</td>
+                                <td><span style="color: #5eead4; font-weight: 600;">${referredBy}</span></td>
                                 <td>${badge}</td>
                             </tr>
                         `;
                     }
-                });
+                }
 
                 if (pendingCount === 0) {
-                    depositTableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: #94a3b8;">কোনো পেন্ডিং ডিপোজিট অনুরোধ নেই।</td></tr>`;
+                    depositTableBody.innerHTML = `<tr><td colspan="10" style="text-align: center; color: #94a3b8;">কোনো পেন্ডিং ডিপোজিট অনুরোধ নেই।</td></tr>`;
                 }
                 if (historyCount === 0) {
-                    depositHistoryBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #94a3b8;">ডিপোজিট ইতিহাস খালি আছে</td></tr>`;
+                    depositHistoryBody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #94a3b8;">ডিপোজিট ইতিহাস খালি আছে</td></tr>`;
                 }
             });
         }
@@ -598,7 +718,7 @@
             onSnapshot(collection(db, "users"), async (snapshot) => {
                 usersTableBody.innerHTML = "";
                 if (snapshot.empty) {
-                    usersTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #94a3b8;">কোনো ব্যবহারকারী পাওয়া যায়নি</td></tr>`;
+                    usersTableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: #94a3b8;">কোনো ব্যবহারকারী পাওয়া যায়নি</td></tr>`;
                     return;
                 }
 
@@ -613,6 +733,7 @@
                     let currentMembership = data.membership || "Free";
                     const accountStatus = data.status || "Active";
                     const expiryTimestamp = data.membershipExpiry;
+                    const referredBy = data.referredBy || data.referBy || data.referrer || "কেউ না";
 
                     if (currentMembership !== "Free" && expiryTimestamp) {
                         const expiryDate = expiryTimestamp.toDate();
@@ -654,18 +775,138 @@
                         ${expiryText}
                     `;
 
+                    const referBonusDropdown = `
+                        <select class="bonus-select" onchange="addReferBonus('${userId}', this.value, this)">
+                            <option value="" disabled selected>বোনাস সিলেক্ট করুন</option>
+                            <option value="45">Basic Refer (৳ ৪৫ - ৫%)</option>
+                            <option value="270">Premium Refer (৳ ২৭০ - ১৫%)</option>
+                            <option value="675">Pro Refer (৳ ৬৭৫ - ২৫%)</option>
+                        </select>
+                    `;
+
                     usersTableBody.innerHTML += `
                         <tr>
-                            <td><b>${name}</b><br><small style="color:#64748b">${userId}</small></td>
+                            <td>
+                                <b>${name}</b><br>
+                                <small style="color:#64748b">ID: ${userId}</small><br>
+                                <small style="color:#5eead4;">Referred By: ${referredBy}</small>
+                            </td>
                             <td>${email}</td>
                             <td>৳ ${balance.toFixed(2)}</td>
                             <td>${membershipDropdown}</td>
+                            <td>${referBonusDropdown}</td>
                             <td>${statusBadge}</td>
                             <td>${actionBtns}</td>
                         </tr>
                     `;
                 });
             });
+        }
+
+        // বিকাশ ও নগদ নম্বর ম্যানেজমেন্ট ফাংশনসমূহ
+        window.addPaymentNumber = async function(type) {
+            const inputField = document.getElementById(type === 'bkash' ? 'bkashNumberInput' : 'nogodNumberInput');
+            const typeField = document.getElementById(type === 'bkash' ? 'bkashTypeInput' : 'nogodTypeInput');
+            const number = inputField.value.trim();
+            const accountType = typeField.value;
+
+            if (!number) {
+                alert("দয়া করে একটি নম্বর লিখুন।");
+                return;
+            }
+
+            try {
+                await addDoc(collection(db, "payment_numbers"), {
+                    gateway: type, // 'bkash' or 'nogod'
+                    number: number,
+                    accountType: accountType,
+                    status: "Active", // ডিফল্টভাবে Active থাকবে
+                    timestamp: serverTimestamp()
+                });
+                alert("নম্বর সফলভাবে যোগ করা হয়েছে!");
+                inputField.value = "";
+            } catch (error) {
+                alert("ত্রুটি: " + error.message);
+            }
+        }
+
+        function loadPaymentNumbers(type) {
+            onSnapshot(collection(db, "payment_numbers"), (snapshot) => {
+                const tableBody = type === 'bkash' ? bkashTableBody : nogodTableBody;
+                tableBody.innerHTML = "";
+                let count = 0;
+
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    if (data.gateway === type) {
+                        count++;
+                        const numId = docSnap.id;
+                        const status = data.status || "Active";
+                        const statusBadge = status === "Active" ? `<span class="badge-active">Active</span>` : `<span class="badge-rejected">Inactive</span>`;
+                        const toggleBtn = status === "Active" 
+                            ? `<button class="btn-ban" onclick="toggleNumberStatus('${numId}', 'Inactive')">ইনঅ্যাক্টিভ করুন</button>` 
+                            : `<button class="btn-approve" onclick="toggleNumberStatus('${numId}', 'Active')">অ্যাক্টিভ করুন</button>`;
+
+                        tableBody.innerHTML += `
+                            <tr>
+                                <td><b>${data.number}</b> (${data.accountType})</td>
+                                <td>${data.accountType}</td>
+                                <td>${statusBadge}</td>
+                                <td>
+                                    ${toggleBtn}
+                                    <button class="btn-delete" onclick="deletePaymentNumber('${numId}')">রিমুভ</button>
+                                </td>
+                            </tr>
+                        `;
+                    }
+                });
+
+                if (count === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #94a3b8;">কোনো নম্বর পাওয়া যায়নি।</td></tr>`;
+                }
+            });
+        }
+
+        window.toggleNumberStatus = async function(numId, newStatus) {
+            try {
+                await updateDoc(doc(db, "payment_numbers", numId), { status: newStatus });
+                alert("নম্বর স্ট্যাটাস আপডেট করা হয়েছে!");
+            } catch (error) {
+                alert("ত্রুটি: " + error.message);
+            }
+        }
+
+        window.deletePaymentNumber = async function(numId) {
+            if (!confirm("আপনি কি এই নম্বরটি রিমুভ করতে চান?")) return;
+            try {
+                await deleteDoc(doc(db, "payment_numbers", numId));
+                alert("নম্বর সফলভাবে ডিলিট করা হয়েছে!");
+            } catch (error) {
+                alert("ত্রুটি: " + error.message);
+            }
+        }
+
+        // ডিপোজিট পেজের জন্য রেন্ডম একটিভ নম্বর ফেচ করার ফাংশন (deposit.html ফাইলে এই লজিক ব্যবহার করতে পারবেন)
+        window.getRandomActiveNumber = async function(gatewayName) {
+            try {
+                const querySnapshot = await getDocs(collection(db, "payment_numbers"));
+                let activeNumbers = [];
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    if (data.gateway === gatewayName && data.status === "Active") {
+                        activeNumbers.push(data);
+                    }
+                });
+
+                if (activeNumbers.length > 0) {
+                    // রেন্ডমলি যেকোনো একটি সিলেক্ট করা
+                    const randomIndex = Math.floor(Math.random() * activeNumbers.length);
+                    return activeNumbers[randomIndex];
+                }
+            } catch (e) {
+                console.error("Error fetching random number: ", e);
+            }
+            return null;
         }
 
         function calculateExpiryDate(planName) {
@@ -679,6 +920,28 @@
             }
             return date;
         }
+
+        window.addReferBonus = async function(userId, bonusAmountStr, selectElement) {
+            const bonusAmount = parseFloat(bonusAmountStr);
+            if (isNaN(bonusAmount)) return;
+
+            if (!confirm(`এই ব্যবহারকারীর অ্যাকাউন্টে ${bonusAmount} টাকা রেফার বোনাস যোগ করতে চান কি?`)) {
+                selectElement.value = "";
+                return;
+            }
+
+            try {
+                const userRef = doc(db, "users", userId);
+                await updateDoc(userRef, {
+                    balance: increment(bonusAmount)
+                });
+                alert(`সফলভাবে ${bonusAmount} টাকা রেফার বোনাস যোগ করা হয়েছে!`);
+                selectElement.value = "";
+            } catch (error) {
+                alert("ত্রুটি: " + error.message);
+                selectElement.value = "";
+            }
+        };
 
         window.updateDepositStatus = async function(depositId, userId, planName, newStatus) {
             if (!confirm(`নিশ্চিত করুন আপনি ${newStatus} করতে চান কি?`)) return;
@@ -747,4 +1010,4 @@
         });
     </script>
 </body>
-</html>
+                    </html>
