@@ -330,8 +330,8 @@
                     <label>Payment Method</label>
                     <select id="paymentMethod" required onchange="showPaymentNumber(this.value)">
                         <option value="">মাধ্যম নির্বাচন করুন</option>
-                        <option value="bKash">বিকাশ (bKash)</option>
-                        <option value="Nagad">নগদ (Nagad)</option>
+                        <option value="bkash">বিকাশ (bKash)</option>
+                        <option value="nogod">নগদ (Nagad)</option>
                     </select>
                 </div>
 
@@ -376,7 +376,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, doc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyByuYaP1fcGz0PJJ3r3QPWt0PNRSR9EUO0",
@@ -392,39 +392,14 @@
         const db = getFirestore(app);
 
         let currentUser = null;
-        let adminSettings = {
-            bkashNumber: "017XXXXXXXX (Not Set)",
-            nagadNumber: "018XXXXXXXX (Not Set)",
-            bkashActive: true,
-            nagadActive: true
-        };
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
-                // ফায়ারস্টোর থেকে অ্যাডমিনের দেওয়া পেমেন্ট নম্বর ফেচ করা
-                await fetchAdminPaymentSettings();
             } else {
                 window.location.href = "login.html";
             }
         });
-
-        // ফায়ারস্টোর থেকে সেটিংস বা নম্বর ফেচ করার ফাংশন (ধরে নেওয়া হচ্ছে settings/payment নামে ডকুমেন্ট আছে)
-        async function fetchAdminPaymentSettings() {
-            try {
-                const docRef = doc(db, "settings", "payment");
-                const docSnap = await getDoc(docRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    adminSettings.bkashNumber = data.bkashNumber || adminSettings.bkashNumber;
-                    adminSettings.nagadNumber = data.nagadNumber || adminSettings.nagadNumber;
-                    adminSettings.bkashActive = data.bkashActive !== undefined ? data.bkashActive : true;
-                    adminSettings.nagadActive = data.nagadActive !== undefined ? data.nagadActive : true;
-                }
-            } catch (err) {
-                console.log("Settings load error: ", err);
-            }
-        }
 
         // Global variables for plan selection
         window.selectPlan = function(planName, planPrice, element) {
@@ -440,25 +415,43 @@
             document.getElementById('paymentDetailsCard').scrollIntoView({ behavior: 'smooth' });
         };
 
-        // Payment Method Change এ নম্বর ডাইনামিকালি দেখানোর ফাংশন
-        window.showPaymentNumber = function(method) {
+        // Payment Method Change এ ফায়ারবেস থেকে রেন্ডম একটিভ নম্বর দেখানোর ফাংশন
+        window.showPaymentNumber = async function(method) {
             const box = document.getElementById('numberDisplayBox');
             box.style.display = 'block';
 
-            if (method === 'bKash') {
-                if (adminSettings.bkashActive) {
-                    box.innerHTML = `বিকাশ (Personal) নম্বর: <span style="color:#ffffff;">${adminSettings.bkashNumber}</span> (Send Money)`;
-                } else {
-                    box.innerHTML = `<span style="color: #f87171;">বিকাশ পেমেন্ট বর্তমানে বন্ধ রয়েছে।</span>`;
-                }
-            } else if (method === 'Nagad') {
-                if (adminSettings.nagadActive) {
-                    box.innerHTML = `নগদ (Personal) নম্বর: <span style="color:#ffffff;">${adminSettings.nagadNumber}</span> (Send Money)`;
-                } else {
-                    box.innerHTML = `<span style="color: #f87171;">নগদ পেমেন্ট বর্তমানে বন্ধ রয়েছে।</span>`;
-                }
-            } else {
+            if (!method) {
                 box.style.display = 'none';
+                return;
+            }
+
+            box.innerHTML = `নম্বর লোড হচ্ছে...`;
+
+            try {
+                const querySnapshot = await getDocs(collection(db, "payment_numbers"));
+                let activeNumbers = [];
+                
+                querySnapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    // অ্যাডমিন প্যানেলে 'bkash' বা 'nogod' হিসেবে সেভ করা আছে
+                    if (data.gateway === method && data.status === "Active") {
+                        activeNumbers.push(data);
+                    }
+                });
+
+                if (activeNumbers.length > 0) {
+                    // রেন্ডমলি যেকোনো একটিভ নম্বর সিলেক্ট করা
+                    const randomIndex = Math.floor(Math.random() * activeNumbers.length);
+                    const selected = activeNumbers[randomIndex];
+                    
+                    const gatewayTitle = method === 'bkash' ? 'বিকাশ' : 'নগদ';
+                    box.innerHTML = `${gatewayTitle} (${selected.accountType}) নম্বর: <span style="color:#ffffff;">${selected.number}</span> (Send Money)`;
+                } else {
+                    box.innerHTML = `<span style="color: #f87171;">এই মুহূর্তে কোনো নম্বর সক্রিয় নেই।</span>`;
+                }
+            } catch (error) {
+                console.error("Error fetching active numbers: ", error);
+                box.innerHTML = `<span style="color: #f87171;">নম্বর লোড করতে সমস্যা হয়েছে।</span>`;
             }
         };
 
@@ -517,4 +510,4 @@
             });
     </script>
 </body>
-</html>
+            </html>
