@@ -132,6 +132,49 @@
             transform: none;
         }
 
+        /* Unverified Warning Screen Styling */
+        .unverified-card {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .warning-icon {
+            font-size: 3.5rem;
+            color: #f87171;
+            margin-bottom: 15px;
+        }
+
+        .unverified-card h3 {
+            font-size: 1.4rem;
+            color: #ffffff;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .unverified-card p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .btn-home-redirect {
+            display: inline-block;
+            background: #5eead4;
+            color: #0f172a;
+            padding: 12px 25px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn-home-redirect:hover {
+            background: #38bdf8;
+            transform: translateY(-2px);
+        }
+
         .signup-redirect {
             text-align: center;
             margin-top: 25px;
@@ -174,27 +217,36 @@
     </header>
 
     <div class="login-container">
-        <div class="login-header-text">
-            <h2>লগইন করুন <span>এখনই</span></h2>
-            <p>আপনার অ্যাকাউন্ট অ্যাক্সেস করতে তথ্য দিন</p>
+        <div id="loginFormSection">
+            <div class="login-header-text">
+                <h2>লগইন করুন <span>এখনই</span></h2>
+                <p>আপনার অ্যাকাউন্ট অ্যাক্সেস করতে তথ্য দিন</p>
+            </div>
+
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>ইমেইল এড্রেস (Email)</label>
+                    <input type="email" id="loginEmail" required placeholder="example@gmail.com">
+                </div>
+
+                <div class="form-group">
+                    <label>পাসওয়ার্ড (Password)</label>
+                    <input type="password" id="loginPassword" required placeholder="আপনার পাসওয়ার্ড দিন">
+                </div>
+
+                <button type="submit" id="loginBtn" class="btn-login">লগইন করুন</button>
+            </form>
+
+            <div class="signup-redirect">
+                অ্যাকাউন্ট নেই? <a href="signup.html">সাইন আপ করুন ➡</a>
+            </div>
         </div>
 
-        <form id="loginForm">
-            <div class="form-group">
-                <label>ইমেইল এড্রেস (Email)</label>
-                <input type="email" id="loginEmail" required placeholder="example@gmail.com">
-            </div>
-
-            <div class="form-group">
-                <label>পাসওয়ার্ড (Password)</label>
-                <input type="password" id="loginPassword" required placeholder="আপনার পাসওয়ার্ড দিন">
-            </div>
-
-            <button type="submit" id="loginBtn" class="btn-login">লগইন করুন</button>
-        </form>
-
-        <div class="signup-redirect">
-            অ্যাকাউন্ট নেই? <a href="signup.html">সাইন আপ করুন ➡</a>
+        <div id="unverifiedSection" style="display: none;" class="unverified-card">
+            <div class="warning-icon">⚠️</div>
+            <h3>দুঃখিত!</h3>
+            <p>আপনার অ্যাকাউন্টটি সফলভাবে ভেরিফাই হয়নি। দয়া করে আপনার জিমেইল ইনবক্স চেক করে ভেরিফিকেশন সম্পন্ন করার পর লগইন করুন।</p>
+            <a href="index.html" class="btn-home-redirect">হোমে ফিরে যান</a>
         </div>
     </div>
 
@@ -206,13 +258,13 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyByuYaP1fcGz0PJJ3r3QPWt0PNRSR9EUO0",
             authDomain: "click2cash-134bf.firebaseapp.com",
-            projectId: "click2cash-134bf.firebasestorage.app",
-            storageBucket: "click2cash-134bf",
+            projectId: "click2cash-134bf",
+            storageBucket: "click2cash-134bf.firebasestorage.app",
             messagingSenderId: "142040665028",
             appId: "1:142040665028:web:6c7f34b8c47cbd02e6f291"
         };
@@ -222,6 +274,8 @@
 
         const loginForm = document.getElementById('loginForm');
         const loginBtn = document.getElementById('loginBtn');
+        const loginFormSection = document.getElementById('loginFormSection');
+        const unverifiedSection = document.getElementById('unverifiedSection');
 
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -229,16 +283,25 @@
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
 
-            // বাটনে লোডিং টেক্সট দেওয়া এবং বাটন ডিজেবল করা যাতে ডাবল ক্লিক না হয়
+            // বাটনে লোডিং টেক্সট দেওয়া এবং বাটন ডিজেবল করা
             loginBtn.innerText = "লগইন হচ্ছে...";
             loginBtn.disabled = true;
 
             try {
                 // ফায়ারবেস অথেন্টিকেশন দিয়ে লগইন চেক
-                await signInWithEmailAndPassword(auth, email, password);
-                
-                // সফলভাবে লগইন হলে সরাসরি ড্যাশবোর্ডে রিডায়রেক্ট হবে
-                window.location.href = "dashboard.html";
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // চেক করা ইউজার ইমেইল ভেরিফাই করেছে কিনা
+                if (user.emailVerified) {
+                    // ভেরিফাইড হলে ড্যাশবোর্ডে রিডায়রেক্ট হবে
+                    window.location.href = "dashboard.html";
+                } else {
+                    // ভেরিফাইড না হলে সাইন আউট করে ওয়ার্নিং স্ক্রিন দেখানো
+                    await signOut(auth);
+                    loginFormSection.style.display = 'none';
+                    unverifiedSection.style.display = 'block';
+                }
 
             } catch (error) {
                 alert("লগইন ব্যর্থ হয়েছে! ইমেইল বা পাসওয়ার্ড সঠিক নয়।\nত্রুটি: " + error.message);
