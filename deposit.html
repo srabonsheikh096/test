@@ -289,15 +289,15 @@
                 <div class="plan-grid">
                     <div class="plan-option" onclick="selectPlan('Basic', 800, this)">
                         <div class="plan-name">Basic Plan</div>
-                        <div class="plan-price">৳ 800</div>
+                        <div class="plan-price">900৳</div>
                     </div>
                     <div class="plan-option" onclick="selectPlan('Premium', 1600, this)">
                         <div class="plan-name">Premium Plan</div>
-                        <div class="plan-price">৳ 1600</div>
+                        <div class="plan-price">1800৳</div>
                     </div>
                     <div class="plan-option" onclick="selectPlan('Pro', 2800, this)">
                         <div class="plan-name">Pro Plan</div>
-                        <div class="plan-price">৳ 2800</div>
+                        <div class="plan-price">2700৳</div>
                     </div>
                 </div>
 
@@ -309,7 +309,7 @@
                 <div class="card-title">💳 পেমেন্ট তথ্য দিন</div>
 
                 <div class="instruction-box">
-                    <strong>নির্দেশনা:</strong> নিচে দেওয়া আমাদের মার্চেন্ট/পার্সোনাল নম্বরে টাকা পাঠিয়ে সঠিক পেমেন্ট ট্রানজেকশন আইডি সাবমিট করুন। <br>
+                    <strong>নির্দেশনা:</strong> নিচে দেওয়া আমাদের পার্সোনাল নম্বরে টাকা পাঠিয়ে সঠিক পেমেন্ট ট্রানজেকশন আইডি সাবমিট করুন। <br>
                     • বিকাশ/নগদ (Personal): <strong>017XXXXXXXX</strong>
                 </div>
 
@@ -319,7 +319,7 @@
                 </div>
 
                 <div class="form-group">
-                    <label>পেমেন্ট মাধ্যম (Payment Method)</label>
+                    <label>Payment Method</label>
                     <select id="paymentMethod" required>
                         <option value="">মাধ্যম নির্বাচন করুন</option>
                         <option value="bKash">বিকাশ (bKash)</option>
@@ -339,7 +339,7 @@
                 </div>
 
                 <!-- Pay Now Button -->
-                <button type="submit" class="btn-pay" id="payNowBtn">Pay Now (পেমেন্ট ট্রানজেকশন জমা)</button>
+                <button type="submit" class="btn-pay" id="payNowBtn">Pay Now</button>
             </div>
 
         </form>
@@ -354,7 +354,7 @@
             <div class="modal-desc">
                 আপনার ডিপোজিট ট্রানজেকশন সফলভাবে জমা হয়েছে! কর্তৃপক্ষ যাচাই করে প্ল্যান আপডেট করে দেবেন।
             </div>
-            <a href="dashboard.html" class="btn-home">হোমে ফিরে যান</a>
+            <a href="dashboard.html" class="btn-home">Home page</a>
         </div>
     </div>
 
@@ -415,11 +415,11 @@
             const plan = document.getElementById('selectedPlanInput').value;
             
             // প্ল্যান অনুযায়ী সঠিক টাকা নির্ধারণ (Basic = 800, Premium = 1600, Pro = 2800)
-            let amount = 800;
+            let amount = 900;
             if (plan === 'Premium') {
-                amount = 1600;
+                amount = 1800;
             } else if (plan === 'Pro') {
-                amount = 2800;
+                amount = 2700;
             }
 
             const method = document.getElementById('paymentMethod').value;
