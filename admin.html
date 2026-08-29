@@ -768,9 +768,9 @@
                     const membershipDropdown = `
                         <select class="membership-select" onchange="changeUserMembership('${userId}', this.value)">
                             <option value="Free" ${currentMembership === 'Free' ? 'selected' : ''}>Free</option>
-                            <option value="Basic" ${currentMembership === 'Basic' ? 'selected' : ''}>Basic (৬ মাস)</option>
-                            <option value="Premium" ${currentMembership === 'Premium' ? 'selected' : ''}>Premium (৪ মাস)</option>
-                            <option value="Pro" ${currentMembership === 'Pro' ? 'selected' : ''}>Pro (৪ মাস)</option>
+                            <option value="Basic" ${currentMembership === 'Basic' ? 'selected' : ''}>Basic (৩ মাস)</option>
+                            <option value="Premium" ${currentMembership === 'Premium' ? 'selected' : ''}>Premium (৩ মাস)</option>
+                            <option value="Pro" ${currentMembership === 'Pro' ? 'selected' : ''}>Pro (৩ মাস)</option>
                         </select>
                         ${expiryText}
                     `;
@@ -912,9 +912,9 @@
         function calculateExpiryDate(planName) {
             const date = new Date();
             if (planName === "Basic") {
-                date.setMonth(date.getMonth() + 6);
+                date.setMonth(date.getMonth() + ৩);
             } else if (planName === "Premium" || planName === "Pro") {
-                date.setMonth(date.getMonth() + 4);
+                date.setMonth(date.getMonth() + ৩);
             } else {
                 return null;
             }
