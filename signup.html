@@ -255,7 +255,7 @@
         <div id="successSection" style="display: none;" class="success-card">
             <div class="success-icon">✅</div>
             <h3>রেজিস্ট্রেশন সফল হয়েছে!</h3>
-            <p>আপনার অ্যাকাউন্ট সফলভাবে তৈরি হয়েছে। এখন আপনার একাউন্টে প্রবেশ করতে নিচের বাটনে ক্লিক করুন।</p>
+            <p>আপনার জিমেইলে একটি ভেরিফিকেশন লিংক পাঠানো হয়েছে। দয়া করে জিমেইল চেক করুন এবং ভেরিফাই করার পর নিচের বাটনে ক্লিক করে লগইন করুন।</p>
             <a href="login.html" class="btn-login-redirect">Login করুন</a>
         </div>
     </div>
@@ -266,7 +266,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -310,15 +310,19 @@
             }
 
             try {
+                // ১. ইউজার ক্রিয়েট করা ফায়ারবেস অথ-এ
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
 
-                // ফায়ারস্টোরে ডাটা সেভ করা
+                // ২. জিমেইলে ভেরিফিকেশন মেইল পাঠানো
+                await sendEmailVerification(user);
+
+                // ৩. ফায়ারস্টোরে সঠিক রেফারাল আইডি সহ ডাটা সেভ করা
                 await setDoc(doc(db, "users", user.uid), {
                     username: username,
                     email: email,
                     phone: phone,
-                    referredBy: referralId || "None",
+                    referredBy: referralId !== "" ? referralId : "None", // রেফারাল আইডি ফায়ারস্টোরে পাঠানো হচ্ছে
                     referralBonusPaid: false,
                     membership: "Free",
                     balance: 0.00,
@@ -327,7 +331,7 @@
                     createdAt: new Date().toISOString()
                 });
 
-                // রেজিস্ট্রেশন সফল হলে ফর্ম লুকিয়ে সাকসেস মেসেজ ও বাটন দেখানো
+                // ৪. রেজিস্ট্রেশন সফল হলে ফর্ম লুকিয়ে সাকসেস মেসেজ দেখানো
                 formSection.style.display = 'none';
                 successSection.style.display = 'block';
 
