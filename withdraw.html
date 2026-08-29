@@ -229,15 +229,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label>টাকার পরিমাণ (Amount in BDT)</label>
-                    <input type="number" class="form-control" id="withdrawAmount" placeholder="সর্বনিম্ন ১০০ টাকা" min="100" required>
+                    <label id="amountLabel">টাকার পরিমাণ (Amount in BDT)</label>
+                    <input type="number" class="form-control" id="withdrawAmount" placeholder="সর্বনিম্ন উইথড্র পরিমাণ লোড হচ্ছে..." required>
                 </div>
 
                 <button type="submit" class="btn-withdraw" id="submitBtn">উইথড্র রিকোয়েস্ট পাঠান</button>
             </form>
 
-            <div class="notice-box">
-                <strong>নিয়মাবলী:</strong> সর্বনিম্ন উইথড্র ৩০০ টাকা। রিকোয়েস্ট করার ২৪ ঘণ্টার মধ্যে পেমেন্ট কমপ্লিট করা হয়। ভুল নম্বর প্রদান করলে কর্তৃপক্ষ দায়ী থাকবে না।
+            <div class="notice-box" id="noticeBoxText">
+                <strong>নিয়মাবলী:</strong> রিকোয়েস্ট করার ২৪ ঘণ্টার মধ্যে পেমেন্ট কমপ্লিট করা হয়। ভুল নম্বর প্রদান করলে কর্তৃপক্ষ দায়ী থাকবে না।
             </div>
         </div>
     </main>
@@ -267,6 +267,8 @@
         let currentUserId = null;
         let currentUserEmail = "";
         let currentBalance = 0;
+        let userPlan = "Basic";
+        let minWithdrawLimit = 1000; // ডিফল্ট
 
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -277,9 +279,32 @@
                     if (docSnap.exists()) {
                         const data = docSnap.data();
                         currentBalance = data.balance || 0;
+                        userPlan = data.plan || "Basic"; // ফায়ারস্টোর থেকে ইউজারের প্ল্যান নেওয়া হচ্ছে
+
+                        // প্ল্যান অনুযায়ী সর্বনিম্ন উইথড্র লিমিট সেট করা
+                        if (userPlan === 'Pro') {
+                            minWithdrawLimit = 3000;
+                        } else if (userPlan === 'Premium') {
+                            minWithdrawLimit = 2000;
+                        } else {
+                            minWithdrawLimit = 1000; // Basic বা অন্য ক্ষেত্রে
+                        }
+
+                        // ব্যালেন্স ও ইনপুট ফিল্ডের প্লেসহোল্ডার আপডেট করা
                         const balanceEl = document.getElementById('userAvailableBalance');
                         if(balanceEl) {
                             balanceEl.innerText = `৳ ${currentBalance.toFixed(2)}`;
+                        }
+
+                        const amountInput = document.getElementById('withdrawAmount');
+                        if(amountInput) {
+                            amountInput.min = minWithdrawLimit;
+                            amountInput.placeholder = `সর্বনিম্ন ${minWithdrawLimit} টাকা (${userPlan} Plan)`;
+                        }
+
+                        const noticeBox = document.getElementById('noticeBoxText');
+                        if(noticeBox) {
+                            noticeBox.innerHTML = `<strong>নিয়মাবলী (${userPlan} Plan):</strong> আপনার বর্তমান প্ল্যান অনুযায়ী সর্বনিম্ন উইথড্র <strong>${minWithdrawLimit} টাকা</strong>। রিকোয়েস্ট করার ২৪ ঘণ্টার মধ্যে পেমেন্ট কমপ্লিট করা হয়। ভুল নম্বর প্রদান করলে কর্তৃপক্ষ দায়ী থাকবে না।`;
                         }
                     }
                 });
@@ -296,8 +321,9 @@
             const number = document.getElementById('withdrawNumber').value;
             const amount = parseFloat(document.getElementById('withdrawAmount').value);
 
-            if (amount < 100) {
-                alert("সর্বনিম্ন উইথড্র পরিমাণ ১০০ টাকা হতে হবে।");
+            // ডাইনামিকালি ফায়ারস্টোর থেকে আসা প্ল্যানের লিমিট দিয়ে চেক করা
+            if (amount < minWithdrawLimit) {
+                alert(`আপনার বর্তমান (${userPlan}) প্ল্যান অনুযায়ী সর্বনিম্ন উইথড্র পরিমাণ ${minWithdrawLimit} টাকা হতে হবে।`);
                 return;
             }
 
@@ -311,10 +337,11 @@
             submitBtn.innerText = "প্রসেসিং হচ্ছে...";
 
             try {
-                // ১. ফায়ারস্টোরে রিকোয়েস্ট সেভ করা
+                // ১. ফায়ারস্টোরে রিকোয়েস্ট সেভ করা (সাথে প্ল্যান ও যুক্ত করে দেওয়া হলো সুবিধার জন্য)
                 await addDoc(collection(db, "withdraws"), {
                     uid: currentUserId,
                     email: currentUserEmail,
+                    plan: userPlan,
                     method: method,
                     accountType: accType,
                     number: number,
@@ -329,7 +356,7 @@
                     balance: currentBalance - amount
                 });
 
-                // ৩. পপআপের পরিবর্তে সুন্দর ইন্টারফেস বা স্ক্রিন দেখানো
+                // ৩. সফল স্ক্রিন দেখানো
                 const cardContent = document.getElementById('cardContent');
                 cardContent.innerHTML = `
                     <div class="success-screen">
