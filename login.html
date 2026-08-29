@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Click2Cash</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #ffffff;
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .company-header {
+            background: #020617;
+            padding: 18px 40px;
+            text-align: left;
+            border-bottom: 1px solid #1e293b;
+        }
+
+        .company-header a {
+            text-decoration: none;
+        }
+
+        .company-header h1 {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #38bdf8;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            transition: color 0.3s;
+        }
+
+        .company-header h1:hover {
+            color: #5eead4;
+        }
+
+        .login-container {
+            max-width: 480px;
+            width: 90%;
+            margin: 60px auto;
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 40px 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-header-text {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header-text h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #ffffff;
+            margin-bottom: 8px;
+        }
+
+        .login-header-text h2 span {
+            color: #5eead4;
+        }
+
+        .login-header-text p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #cbd5e1;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            color: #ffffff;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #5eead4;
+        }
+
+        .btn-login {
+            display: block;
+            width: 100%;
+            background: #5eead4;
+            color: #0f172a;
+            padding: 14px 0;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            background: #38bdf8;
+            transform: translateY(-2px);
+        }
+
+        .btn-login:disabled {
+            background: #334155;
+            color: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .signup-redirect {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.95rem;
+            color: #94a3b8;
+        }
+
+        .signup-redirect a {
+            color: #38bdf8;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .signup-redirect a:hover {
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+        }
+
+        footer {
+            background: #020617;
+            color: #94a3b8;
+            padding: 40px 25px 20px 25px;
+            text-align: center;
+            border-top: 1px solid #1e293b;
+            margin-top: auto;
+        }
+
+        .copyright-area {
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="company-header">
+        <a href="index.html">
+            <h1>Click2Cash</h1>
+        </a>
+    </header>
+
+    <div class="login-container">
+        <div class="login-header-text">
+            <h2>লগইন করুন <span>এখনই</span></h2>
+            <p>আপনার অ্যাকাউন্ট অ্যাক্সেস করতে তথ্য দিন</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label>ইমেইল এড্রেস (Email)</label>
+                <input type="email" id="loginEmail" required placeholder="example@gmail.com">
+            </div>
+
+            <div class="form-group">
+                <label>পাসওয়ার্ড (Password)</label>
+                <input type="password" id="loginPassword" required placeholder="আপনার পাসওয়ার্ড দিন">
+            </div>
+
+            <button type="submit" id="loginBtn" class="btn-login">লগইন করুন</button>
+        </form>
+
+        <div class="signup-redirect">
+            অ্যাকাউন্ট নেই? <a href="signup.html">সাইন আপ করুন ➡</a>
+        </div>
+    </div>
+
+    <footer>
+        <div class="copyright-area">
+            &copy; ২০২৬ Click2Cash. All Rights Reserved.
+        </div>
+    </footer>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyByuYaP1fcGz0PJJ3r3QPWt0PNRSR9EUO0",
+            authDomain: "click2cash-134bf.firebaseapp.com",
+            projectId: "click2cash-134bf.firebasestorage.app",
+            storageBucket: "click2cash-134bf",
+            messagingSenderId: "142040665028",
+            appId: "1:142040665028:web:6c7f34b8c47cbd02e6f291"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            // বাটনে লোডিং টেক্সট দেওয়া এবং বাটন ডিজেবল করা যাতে ডাবল ক্লিক না হয়
+            loginBtn.innerText = "লগইন হচ্ছে...";
+            loginBtn.disabled = true;
+
+            try {
+                // ফায়ারবেস অথেন্টিকেশন দিয়ে লগইন চেক
+                await signInWithEmailAndPassword(auth, email, password);
+                
+                // সফলভাবে লগইন হলে সরাসরি ড্যাশবোর্ডে রিডায়রেক্ট হবে
+                window.location.href = "dashboard.html";
+
+            } catch (error) {
+                alert("লগইন ব্যর্থ হয়েছে! ইমেইল বা পাসওয়ার্ড সঠিক নয়।\nত্রুটি: " + error.message);
+                
+                // ভুল হলে বাটন আবার আগের অবস্থায় ফিরিয়ে আনা
+                loginBtn.innerText = "লগইন করুন";
+                loginBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
