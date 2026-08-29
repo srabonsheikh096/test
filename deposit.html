@@ -145,7 +145,7 @@
             cursor: not-allowed;
         }
 
-        /* Payment Instruction Box */
+        /* Payment Instruction & Number Box */
         .instruction-box {
             background: rgba(56, 189, 248, 0.1);
             border: 1px solid rgba(56, 189, 248, 0.3);
@@ -154,7 +154,20 @@
             margin-bottom: 20px;
             font-size: 0.9rem;
             color: #38bdf8;
-            line-height: 1.5;
+            line-height: 1.6;
+        }
+
+        .number-display-box {
+            background: #0f172a;
+            border: 2px dashed #5eead4;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 10px;
+            text-align: center;
+            font-size: 1.1rem;
+            color: #5eead4;
+            font-weight: 700;
+            display: none;
         }
 
         /* Pay Now Button */
@@ -269,10 +282,8 @@
 </head>
 <body>
 
-    <!-- Dynamic Header Container -->
     <div id="header-container"></div>
 
-    <!-- Main Deposit Container -->
     <main class="deposit-container">
         
         <div class="section-header">
@@ -282,20 +293,19 @@
 
         <form id="depositForm">
             
-            <!-- Step 1: Select Plan -->
             <div class="deposit-card">
                 <div class="card-title">📌 ১. একটি প্ল্যান সিলেক্ট করুন (Select Plan)</div>
                 
                 <div class="plan-grid">
-                    <div class="plan-option" onclick="selectPlan('Basic', 800, this)">
+                    <div class="plan-option" onclick="selectPlan('Basic', 900, this)">
                         <div class="plan-name">Basic Plan</div>
                         <div class="plan-price">900৳</div>
                     </div>
-                    <div class="plan-option" onclick="selectPlan('Premium', 1600, this)">
+                    <div class="plan-option" onclick="selectPlan('Premium', 1800, this)">
                         <div class="plan-name">Premium Plan</div>
                         <div class="plan-price">1800৳</div>
                     </div>
-                    <div class="plan-option" onclick="selectPlan('Pro', 2800, this)">
+                    <div class="plan-option" onclick="selectPlan('Pro', 2700, this)">
                         <div class="plan-name">Pro Plan</div>
                         <div class="plan-price">2700৳</div>
                     </div>
@@ -304,13 +314,11 @@
                 <input type="hidden" id="selectedPlanInput" required>
             </div>
 
-            <!-- Step 2: Payment Details -->
             <div class="deposit-card" id="paymentDetailsCard" style="display: none;">
                 <div class="card-title">💳 পেমেন্ট তথ্য দিন</div>
 
                 <div class="instruction-box">
-                    <strong>নির্দেশনা:</strong> নিচে দেওয়া আমাদের পার্সোনাল নম্বরে টাকা পাঠিয়ে সঠিক পেমেন্ট ট্রানজেকশন আইডি সাবমিট করুন। <br>
-                    • বিকাশ/নগদ (Personal): <strong>017XXXXXXXX</strong>
+                    <strong>নির্দেশনা:</strong> আমাদের নাম্বরে শুধুমাত্র সেন্ড মানি গ্রহণ করা হয়। নিচে মাধ্যম সিলেক্ট করার পর পেমেন্ট নম্বর দেখতে পাবেন। টাকা পাঠিয়ে সঠিক ট্রানজেকশন আইডি সাবমিট করুন।
                 </div>
 
                 <div class="form-group">
@@ -320,12 +328,17 @@
 
                 <div class="form-group">
                     <label>Payment Method</label>
-                    <select id="paymentMethod" required>
+                    <select id="paymentMethod" required onchange="showPaymentNumber(this.value)">
                         <option value="">মাধ্যম নির্বাচন করুন</option>
                         <option value="bKash">বিকাশ (bKash)</option>
                         <option value="Nagad">নগদ (Nagad)</option>
-                        <option value="Rocket">রকেট (Rocket)</option>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <div id="numberDisplayBox" class="number-display-box">
+                        মাধ্যম সিলেক্ট করুন...
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -338,7 +351,6 @@
                     <input type="text" id="trxId" required placeholder="যেমন: 9N8K7L6M54">
                 </div>
 
-                <!-- Pay Now Button -->
                 <button type="submit" class="btn-pay" id="payNowBtn">Pay Now</button>
             </div>
 
@@ -346,7 +358,6 @@
 
     </main>
 
-    <!-- Custom Success Modal Popup -->
     <div class="modal-overlay" id="successModal">
         <div class="modal-box">
             <div class="modal-icon">🎉</div>
@@ -358,16 +369,14 @@
         </div>
     </div>
 
-    <!-- Footer -->
     <footer>
         &copy; ২০২৬ Click2Cash. All Rights Reserved.
     </footer>
 
-    <!-- Firebase & Logic Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, doc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyByuYaP1fcGz0PJJ3r3QPWt0PNRSR9EUO0",
@@ -383,14 +392,39 @@
         const db = getFirestore(app);
 
         let currentUser = null;
+        let adminSettings = {
+            bkashNumber: "017XXXXXXXX (Not Set)",
+            nagadNumber: "018XXXXXXXX (Not Set)",
+            bkashActive: true,
+            nagadActive: true
+        };
 
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 currentUser = user;
+                // ফায়ারস্টোর থেকে অ্যাডমিনের দেওয়া পেমেন্ট নম্বর ফেচ করা
+                await fetchAdminPaymentSettings();
             } else {
                 window.location.href = "login.html";
             }
         });
+
+        // ফায়ারস্টোর থেকে সেটিংস বা নম্বর ফেচ করার ফাংশন (ধরে নেওয়া হচ্ছে settings/payment নামে ডকুমেন্ট আছে)
+        async function fetchAdminPaymentSettings() {
+            try {
+                const docRef = doc(db, "settings", "payment");
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    adminSettings.bkashNumber = data.bkashNumber || adminSettings.bkashNumber;
+                    adminSettings.nagadNumber = data.nagadNumber || adminSettings.nagadNumber;
+                    adminSettings.bkashActive = data.bkashActive !== undefined ? data.bkashActive : true;
+                    adminSettings.nagadActive = data.nagadActive !== undefined ? data.nagadActive : true;
+                }
+            } catch (err) {
+                console.log("Settings load error: ", err);
+            }
+        }
 
         // Global variables for plan selection
         window.selectPlan = function(planName, planPrice, element) {
@@ -406,6 +440,28 @@
             document.getElementById('paymentDetailsCard').scrollIntoView({ behavior: 'smooth' });
         };
 
+        // Payment Method Change এ নম্বর ডাইনামিকালি দেখানোর ফাংশন
+        window.showPaymentNumber = function(method) {
+            const box = document.getElementById('numberDisplayBox');
+            box.style.display = 'block';
+
+            if (method === 'bKash') {
+                if (adminSettings.bkashActive) {
+                    box.innerHTML = `বিকাশ (Personal) নম্বর: <span style="color:#ffffff;">${adminSettings.bkashNumber}</span> (Send Money)`;
+                } else {
+                    box.innerHTML = `<span style="color: #f87171;">বিকাশ পেমেন্ট বর্তমানে বন্ধ রয়েছে।</span>`;
+                }
+            } else if (method === 'Nagad') {
+                if (adminSettings.nagadActive) {
+                    box.innerHTML = `নগদ (Personal) নম্বর: <span style="color:#ffffff;">${adminSettings.nagadNumber}</span> (Send Money)`;
+                } else {
+                    box.innerHTML = `<span style="color: #f87171;">নগদ পেমেন্ট বর্তমানে বন্ধ রয়েছে।</span>`;
+                }
+            } else {
+                box.style.display = 'none';
+            }
+        };
+
         // Handle Deposit Submission
         const depositForm = document.getElementById('depositForm');
         depositForm.addEventListener('submit', async (e) => {
@@ -414,7 +470,6 @@
 
             const plan = document.getElementById('selectedPlanInput').value;
             
-            // প্ল্যান অনুযায়ী সঠিক টাকা নির্ধারণ (Basic = 800, Premium = 1600, Pro = 2800)
             let amount = 900;
             if (plan === 'Premium') {
                 amount = 1800;
@@ -439,7 +494,6 @@
                     timestamp: serverTimestamp()
                 });
 
-                // Show Custom Style Modal instead of alert
                 document.getElementById('successModal').classList.add('active');
             } catch (error) {
                 alert("ত্রুটি: " + error.message);
@@ -447,7 +501,6 @@
         });
     </script>
 
-    <!-- Header Load Script -->
     <script>
         fetch('header.html')
             .then(response => response.text())
